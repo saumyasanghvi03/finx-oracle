@@ -2,6 +2,9 @@ import streamlit as st
 from scenarios import SCENARIOS
 import random
 
+# Number of questions per game
+NUM_QUESTIONS = 5
+
 def setup_page():
     st.set_page_config(
         page_title="The FinX Oracle",
@@ -15,8 +18,8 @@ def initialize_game_state():
         st.session_state.user_name = ""
         st.session_state.current_scenario = 0
         st.session_state.insights = 0
-        # Randomize the scenarios for replayability
-        st.session_state.scenarios = random.sample(SCENARIOS, len(SCENARIOS))
+        # Select 5 random scenarios from the total pool of 20
+        st.session_state.scenarios = random.sample(SCENARIOS, NUM_QUESTIONS)
         st.session_state.show_feedback = False
 
 def display_name_input():
@@ -35,14 +38,14 @@ def display_name_input():
 
 def display_scenario():
     current_index = st.session_state.current_scenario
-    if current_index >= len(st.session_state.scenarios):
+    if current_index >= NUM_QUESTIONS:
         st.session_state.game_state = "results"
         st.rerun()
         return
 
     scenario_data = st.session_state.scenarios[current_index]
 
-    st.header(f"Oracle's Challenge #{current_index + 1}: {scenario_data['title']}")
+    st.header(f"Oracle's Challenge #{current_index + 1}/{NUM_QUESTIONS}: {scenario_data['title']}")
     st.markdown(f"**Scenario:** *{scenario_data['description']}*")
     st.markdown("---")
 
@@ -73,26 +76,20 @@ def display_scenario():
 def display_results():
     st.balloons()
     final_insights = st.session_state.insights
-    total_scenarios = len(st.session_state.scenarios)
     user_name = st.session_state.user_name
 
     st.title("The Oracle Has Spoken! 🔮")
     st.markdown(f"### Congratulations, {user_name}!")
-    st.markdown(f"You gained **{final_insights}** out of **{total_scenarios}** Oracle's Insights.")
+    st.markdown(f"You gained **{final_insights}** out of **{NUM_QUESTIONS}** Oracle's Insights.")
     
-    # Check for a high score to provide special message
-    if final_insights >= total_scenarios - 2:
+    if final_insights >= NUM_QUESTIONS - 1:
         st.success("Your strategic foresight is peerless. You are a true FinX Oracle!")
     else:
         st.warning("Your insights are valuable, but there's more to discover.")
 
     st.markdown("---")
     st.subheader("Your Score Frame")
-    st.info("Take a screenshot of this frame and add your photo to share on social media!")
-
-    # Use HTML and Markdown for the shareable frame
-    shareable_text = f"I just scored {final_insights}/{total_scenarios} Oracle's Insights in the FinX Oracle challenge! My knowledge of #FinTech is 🔥 at the #FinXInstitute new campus launch! @FinXInstitute"
-    shareable_link = f"https://twitter.com/intent/tweet?text={shareable_text}"
+    st.info("Take a screenshot of this frame and add your photo to share on LinkedIn!")
 
     st.markdown(
         f"""
@@ -101,23 +98,24 @@ def display_results():
             <div style='height: 150px; width: 150px; margin: 20px auto; background-color: #D3D3D3; border-radius: 50%; border: 3px solid #5C6AC4;'>
                 <p style='padding-top: 60px; font-size: 0.9em; color: #555;'>Add Your Photo Here</p>
             </div>
-            <h1 style='font-size: 3em; color: #5C6AC4;'>{final_insights}/{total_scenarios}</h1>
+            <h1 style='font-size: 3em; color: #5C6AC4;'>{final_insights}/{NUM_QUESTIONS}</h1>
             <p style='font-size: 1.2em; color: #555;'>- {user_name}</p>
         </div>
         """,
         unsafe_allow_html=True
     )
     
-    st.markdown(f"""
-        <div style='text-align: center; margin-top: 20px;'>
-            <a href="{shareable_link}" target="_blank">
-                <button style='background-color: #1DA1F2; color: white; border: none; padding: 12px 24px; border-radius: 5px; font-size: 1.1em; cursor: pointer;'>
-                    Share on Twitter
-                </button>
-            </a>
-        </div>
-        """, unsafe_allow_html=True)
-    
+    st.markdown("### Ready to share on LinkedIn?")
+    linkedin_post_text = (
+        f"I just completed the FinX Oracle challenge at the FinX Institute new campus launch! My financial foresight was "
+        f"tested on real-world scenarios in blockchain, AI, and derivatives. "
+        f"I scored {final_insights}/{NUM_QUESTIONS} Oracle's Insights. \n\n"
+        f"What do you think of my score? Let's connect on the future of FinTech. "
+        f"#FinXInstitute #FinTech #FinXOracle #FinancialInnovation #CampusLaunch"
+    )
+    st.code(linkedin_post_text, language='text')
+    st.markdown("_(Copy the text above and paste it directly into a new LinkedIn post.)_")
+
     st.button("Restart Journey", on_click=lambda: (st.session_state.clear(), st.rerun()))
 
 def main():
