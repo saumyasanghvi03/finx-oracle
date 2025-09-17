@@ -23,7 +23,8 @@ def setup_page():
 # --- Helper Functions ---
 def get_player_photo_html():
     """Generates the HTML for the circular player photo frame."""
-    if st.session_state.uploaded_image is not None:
+    # Robustly check if the attribute exists before accessing it
+    if hasattr(st.session_state, 'uploaded_image') and st.session_state.uploaded_image is not None:
         image_bytes = BytesIO(st.session_state.uploaded_image.getvalue())
         encoded_image = base64.b64encode(image_bytes.read()).decode()
         image_element = f"<img src='data:image/png;base64,{encoded_image}' style='width: 100%; height: 100%; object-fit: cover;'>"
@@ -65,7 +66,7 @@ def initialize_state():
         st.session_state.current_question = 0
         st.session_state.score = 0
         st.session_state.show_feedback = False
-        st.session_state.uploaded_image = None # Added for photo frame
+        st.session_state.uploaded_image = None
         
         fintech_questions = [q for q in SCENARIOS if q['category'] == 'fintech']
         general_finance_questions = [q for q in SCENARIOS if q['category'] == 'general_finance']
@@ -181,7 +182,6 @@ def display_results():
 
     st.title("Challenge Completed!")
     
-    # --- Player Card with Photo Frame ---
     st.subheader("Player Card")
     col1, col2 = st.columns([1, 2])
     with col1:
