@@ -1,5 +1,5 @@
 import streamlit as st
-from scenarios import SCENARIOS # Make sure you have a scenarios.py file
+from scenarios import SCENARIOS
 import random
 from io import BytesIO
 import pandas as pd
@@ -26,7 +26,7 @@ def load_css():
     /* Main app background */
     .stApp {
         background-color: #111111;
-        color: #FFFFFF; /* Brighter text for better readability */
+        color: #FFFFFF; /* Main text is now pure white */
     }
     /* Main content area */
     .main .block-container {
@@ -56,13 +56,13 @@ def load_css():
     .stAlert.st-alert.stSuccess {
         background-color: rgba(46, 139, 87, 0.2);
         border-left: 6px solid #2E8B57; /* Stronger green */
-        color: #FFFFFF;
+        color: #90EE90; /* Text color is now bright green */
     }
     /* Trade Loss */
     .stAlert.st-alert.stError {
         background-color: rgba(220, 20, 60, 0.2);
         border-left: 6px solid #DC143C; /* Stronger red */
-        color: #FFFFFF;
+        color: #F08080; /* Text color is now bright red */
     }
     /* Metric styling */
     [data-testid="stMetricValue"] {
