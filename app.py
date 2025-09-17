@@ -23,7 +23,6 @@ def setup_page():
 # --- Helper Functions ---
 def get_player_photo_html():
     """Generates the HTML for the circular player photo frame."""
-    # Robustly check if the attribute exists before accessing it
     if hasattr(st.session_state, 'uploaded_image') and st.session_state.uploaded_image is not None:
         image_bytes = BytesIO(st.session_state.uploaded_image.getvalue())
         encoded_image = base64.b64encode(image_bytes.read()).decode()
@@ -39,23 +38,20 @@ def get_player_photo_html():
     return frame_html
 
 def display_share_options(player_name, final_score):
-    """Displays the X (Twitter) sharing text and button."""
+    """Generates a pre-filled Twitter link and displays a share button."""
     st.subheader("Share Your Score")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("**1. Copy this post text:**")
-        post_text = (
-            f"I scored {final_score}/{NUM_QUESTIONS} in the FinX Oracle challenge! 🔮\n\n"
-            f"My knowledge of fintech, finance, and global markets was put to the test with scenarios from late 2025. How would you do?\n\n"
-            f"#FinXOracle #Fintech #FinanceQuiz"
-        )
-        st.code(post_text, language='text')
 
-    with col2:
-        st.markdown("**2. Post on X (Twitter):**")
-        encoded_text = quote(post_text)
-        twitter_url = f"https://twitter.com/intent/tweet?text={encoded_text}"
-        st.link_button("Post on X (Twitter)", twitter_url)
+    post_text = (
+        f"I scored {final_score}/{NUM_QUESTIONS} in the FinX Oracle challenge! 🔮\n\n"
+        f"My knowledge of fintech, finance, and global markets was put to the test with scenarios from late 2025. How would you do?\n\n"
+        f"#FinXOracle #Fintech #FinanceQuiz"
+    )
+    # URL-encode the text for the Twitter share link
+    encoded_text = quote(post_text)
+    twitter_url = f"https://twitter.com/intent/tweet?text={encoded_text}"
+
+    st.link_button("🚀 Post Your Score on X (Twitter)", twitter_url, use_container_width=True)
+    st.caption("This will open a new tab with a pre-written post, ready for you to share.")
 
 # --- Game State Management ---
 def initialize_state():
