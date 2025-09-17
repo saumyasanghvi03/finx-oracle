@@ -1,3 +1,4 @@
+# app.py
 import streamlit as st
 from scenarios import SCENARIOS
 import random
@@ -25,16 +26,21 @@ def initialize_state():
         st.session_state.score = 0
         st.session_state.show_feedback = False
         
-        # --- Ratio-Based Randomization Logic ---
+        # --- 2:2:1 Ratio Logic ---
         fintech_questions = [q for q in SCENARIOS if q['category'] == 'fintech']
         general_finance_questions = [q for q in SCENARIOS if q['category'] == 'general_finance']
+        gk_questions = [q for q in SCENARIOS if q['category'] == 'gk']
 
-        selected_fintech = random.sample(fintech_questions, min(3, len(fintech_questions)))
+        # Sample 2 fintech, 2 finance, and 1 GK question
+        selected_fintech = random.sample(fintech_questions, min(2, len(fintech_questions)))
         selected_general = random.sample(general_finance_questions, min(2, len(general_finance_questions)))
+        selected_gk = random.sample(gk_questions, min(1, len(gk_questions)))
 
-        scenarios_sample = selected_fintech + selected_general
+        # Combine and shuffle the final list
+        scenarios_sample = selected_fintech + selected_general + selected_gk
         random.shuffle(scenarios_sample)
             
+        # For each chosen question, shuffle its answer options
         for scenario in scenarios_sample:
             random.shuffle(scenario['choices']) 
             
@@ -49,19 +55,18 @@ def start_quiz():
         st.warning("Please enter your name to begin.")
 
 def restart_quiz():
-    st.session_state.clear()
-    st.rerun()
+    st.session_state.clear() # No st.rerun() needed here
 
 # --- UI Display Functions ---
 def display_name_input():
     st.title("Welcome to the Finance & Fintech Quiz! 💡")
-    st.markdown("Test your knowledge. **Note: Each question has exactly two correct answers.**")
+    st.markdown("Test your knowledge on recent market events. **Each question has exactly two correct answers.**")
     st.text_input("Enter Your Name", key="name_input")
     st.button("Start Quiz", on_click=start_quiz)
 
 def display_question():
     if 'scenarios' not in st.session_state or not st.session_state.scenarios:
-        st.error("There was an error loading the questions. Please restart the quiz.")
+        st.error("There was an error loading questions. Please restart.")
         st.button("Restart Quiz", on_click=restart_quiz)
         return
 
@@ -89,7 +94,6 @@ def display_question():
     
     if not is_disabled and st.button("Submit Answer", key=f"submit_{current_index}"):
         st.session_state.show_feedback = True
-        
         correct_answers = {choice['text'] for choice in scenario['choices'] if choice['correct']}
         user_answers = set(selected_choices)
         
@@ -121,12 +125,10 @@ def display_question():
         st.button("Next Question", on_click=next_question)
 
 def display_results():
-    # --- SOLUTION: Add this check to prevent crashes ---
     if 'score' not in st.session_state or 'user_name' not in st.session_state:
         st.error("SESSION ERROR: Game state not found. Please start a new quiz.")
         st.button("Play Again", on_click=restart_quiz)
-        return # Stop the function here to prevent the crash
-    # --- End of fix ---
+        return
 
     st.balloons()
     final_score = st.session_state.score
