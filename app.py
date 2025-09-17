@@ -2,7 +2,6 @@ import streamlit as st
 from scenarios import SCENARIOS
 import random
 import base64
-from PIL import Image
 from io import BytesIO
 
 # Number of questions per game
@@ -130,24 +129,25 @@ def display_results():
         unsafe_allow_html=True
     )
     
-    st.info("Take a screenshot of the frame above to share on LinkedIn!")
-    st.markdown("### Share on LinkedIn")
-    st.markdown("1. Copy the text below.")
-    st.markdown("2. Click the button to open LinkedIn.")
-    st.markdown("3. Paste the text into your new post.")
-
-    linkedin_post_text = (
-        f"I just completed the FinX Oracle challenge at the FinX Institute new campus launch! My financial foresight was "
-        f"tested on real-world scenarios in blockchain, AI, and derivatives. "
-        f"I scored {final_insights}/{NUM_QUESTIONS} Oracle's Insights. \n\n"
-        f"What do you think of my score? Let's connect on the future of FinTech. "
-        f"#FinXInstitute #FinTech #FinXOracle #FinancialInnovation #CampusLaunch"
-    )
-    st.code(linkedin_post_text, language='text')
-
-    st.link_button("Create My LinkedIn Post", "https://www.linkedin.com/feed/?shareActive=true")
+    st.info("To share your result on LinkedIn, follow these two steps:")
     
-    st.button("Restart Journey", on_click=lambda: (st.session_state.clear(), st.rerun()))
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**1. Copy this post text:**")
+        linkedin_post_text = (
+            f"I just completed the FinX Oracle challenge at the FinX Institute new campus launch! My financial foresight was "
+            f"tested on real-world scenarios in blockchain, AI, and derivatives. "
+            f"I scored {final_insights}/{NUM_QUESTIONS} Oracle's Insights. \n\n"
+            f"What do you think of my score? Let's connect on the future of FinTech. "
+            f"#FinXInstitute #FinTech #FinXOracle #FinancialInnovation #CampusLaunch"
+        )
+        st.code(linkedin_post_text, language='text')
+
+    with col2:
+        st.markdown("**2. Click here & paste the text:**")
+        st.link_button("Create My LinkedIn Post", "https://www.linkedin.com/feed/?shareActive=true")
+    
+    st.button("Restart Journey", on_on_click=lambda: (st.session_state.clear(), st.experimental_rerun()))
 
 def main():
     setup_page()
