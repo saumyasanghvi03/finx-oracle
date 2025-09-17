@@ -1,66 +1,89 @@
-A highly effective prompt for GitHub Copilot follows a two-stage process: a "spec-first" approach. This method has been shown to be far more successful than simply asking for the final code upfront.
+import streamlit as st
+from scenarios import SCENARIOS
+import random
 
-Stage 1: The Product Requirements Document (PRD)
-Start by prompting Copilot to act as a product manager or game designer. This provides the AI with the necessary context and a clear plan before any code is written.
+def setup_page():
+    st.set_page_config(
+        page_title="The FinX Oracle",
+        page_icon="🔮",
+        layout="centered"
+    )
 
-Prompt:
+def initialize_game_state():
+    if "current_scenario" not in st.session_state:
+        st.session_state.current_scenario = 0
+        st.session_state.insights = 0
+        st.session_state.scenarios = random.sample(SCENARIOS, len(SCENARIOS))
+        st.session_state.show_feedback = False
 
-"Act as a game designer. I want to build a simple, interactive web-based game for a professional event targeted at fintech founders and investors. The game should be a quiz-style challenge that tests knowledge of financial technology concepts like blockchain, AI in finance, and derivatives.
+def display_scenario():
+    current_index = st.session_state.current_scenario
+    if current_index >= len(st.session_state.scenarios):
+        show_results_page()
+        return
 
-Generate a detailed, Minimal Viable Product (MVP) specification for this game. Include the following sections:
+    scenario_data = st.session_state.scenarios[current_index]
 
-Core Gameplay Loop: Describe the player's journey from start to finish.
+    st.header(f"Oracle's Challenge #{current_index + 1}: {scenario_data['title']}")
+    st.markdown(f"**Scenario:** *{scenario_data['description']}*")
+    st.markdown("---")
 
-Game Rules: Define how players progress, how scores are calculated, and the win condition.
+    selected_choice = st.radio("Your Decision:", [choice['text'] for choice in scenario_data['choices']], key=f"scenario_{current_index}")
+    
+    if st.button("Commit Decision", key=f"submit_{current_index}"):
+        check_decision(selected_choice, scenario_data)
+        st.session_state.show_feedback = True
+        st.rerun() # Rerun to show feedback and hide button
 
-Content Requirements: Propose 5-7 questions that are scenario-based rather than simple trivia. These questions should be related to the following GitHub projects, but framed in a business context:
+    if st.session_state.show_feedback:
+        for choice in scenario_data['choices']:
+            if selected_choice == choice['text']:
+                if choice['correct']:
+                    st.success(f"🔮 Insight Gained! {choice['feedback']}")
+                    st.session_state.insights += 1
+                else:
+                    st.error(f"❌ Missed Insight. {choice['feedback']}")
+                
+                st.markdown(f"---")
+                st.markdown(f"**Learn more:** Check out the project at: {scenario_data['project_link']}")
+                st.button("Next Challenge", on_click=lambda: (st.session_state.update(current_scenario=current_index + 1, show_feedback=False)), key=f"next_{current_index}")
+                break
 
-finAIguard (AI for fraud detection)
+def check_decision(selected_text, scenario_data):
+    for choice in scenario_data['choices']:
+        if choice['text'] == selected_text:
+            if choice['correct']:
+                return "correct"
+            else:
+                return "incorrect"
 
-onchain-aml-dashboard (on-chain anti-money laundering)
+def show_results_page():
+    st.balloons()
+    st.title("The Oracle has Spoken! 🔮")
+    final_insights = st.session_state.insights
+    total_scenarios = len(st.session_state.scenarios)
 
-DerivX / blockscholes (derivatives trading)
+    st.markdown(f"### You Gained **{final_insights}** out of **{total_scenarios}** Oracle's Insights.")
 
-BlockVista-Terminal (blockchain explorers)
+    if final_insights >= total_scenarios - 1:
+        st.success("Your strategic foresight is peerless. You are a true FinX Oracle!")
+        st.markdown(" \nScan to claim your **Proof of Attendance Protocol**.")
+    else:
+        st.warning("Your insights are valuable, but there's more to discover in the FinTech frontier.")
+        st.info("Visit the project demos to unlock more insights!")
+    
+    if st.button("Restart Journey"):
+        st.session_state.clear()
+        st.rerun()
 
-User Interface (UI) Components: List the key screens and elements (e.g., a welcome screen with name input, the quiz screen, a final results page with a shareable image, a button to get a POAP).
+def main():
+    setup_page()
+    initialize_game_state()
+    st.title("The FinX Oracle 🔮")
+    st.subheader("Your guide to navigating the future of finance.")
+    st.markdown("---")
+    display_scenario()
+    st.markdown(f"**Insights Gained:** {st.session_state.insights}")
 
-Do not write any code yet. Just provide the detailed plan."
-
-Stage 2: The Code Generation
-Once Copilot returns the detailed spec, the next step is to use that context to generate the code. This is where you leverage Copilot's ability to act as a "pair programmer."
-
-Prompt:
-
-"Based on the MVP specification you just created, write a complete, self-contained web application. Use a technology stack suitable for a simple, single-page web app.
-
-Stack Requirements:
-
-Frontend: Pure HTML, CSS, and JavaScript. The entire application should be contained within a single index.html file. Do not use any external frameworks like React or Vue.
-
-Functionality:
-
-Implement the core gameplay loop as described in the spec.
-
-The game should handle user name input on a welcome screen.
-
-It should present the questions and options.
-
-It must calculate and display the final score.
-
-The final results page should include a simple, static div that is ready to be screenshotted for social media. This div should clearly display the user's name and final score.
-
-Code Structure:
-
-Use clear comments to explain each function and key part of the logic.
-
-Ensure the code is well-structured and easy to read.
-
-Begin writing the full index.html file now."
-
-<br>
-<br>
-After you get the initial code, you can use follow-up prompts to refine it. For example:
-> "Add a 'Restart Game' button on the results page that reloads the application to the welcome screen."
-
-By providing this structured, two-part prompt, you are using GitHub Copilot not just as a code completion tool, but as a true development partner—guiding it to build a complex application from a high-level idea down to the final implementation.
+if __name__ == "__main__":
+    main()
