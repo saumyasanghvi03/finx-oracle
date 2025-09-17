@@ -55,7 +55,7 @@ def start_quiz():
         st.warning("Please enter your name to begin.")
 
 def restart_quiz():
-    st.session_state.clear() # No st.rerun() needed here
+    st.session_state.clear()
 
 # --- UI Display Functions ---
 def display_name_input():
