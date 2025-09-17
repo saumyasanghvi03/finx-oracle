@@ -1,4 +1,3 @@
-# app.py
 import streamlit as st
 from scenarios import SCENARIOS
 import random
@@ -80,7 +79,6 @@ def display_question():
 
     is_disabled = st.session_state.show_feedback
     
-    # --- UPDATED: Using st.multiselect instead of st.radio ---
     options = [choice['text'] for choice in scenario['choices']]
     selected_choices = st.multiselect(
         "Select ALL correct answers (there are 2):", 
@@ -92,7 +90,6 @@ def display_question():
     if not is_disabled and st.button("Submit Answer", key=f"submit_{current_index}"):
         st.session_state.show_feedback = True
         
-        # --- UPDATED: Scoring logic for multiple correct answers ---
         correct_answers = {choice['text'] for choice in scenario['choices'] if choice['correct']}
         user_answers = set(selected_choices)
         
@@ -104,7 +101,6 @@ def display_question():
         correct_answers = {choice['text'] for choice in scenario['choices'] if choice['correct']}
         user_answers = set(selected_choices)
         
-        # --- UPDATED: Feedback logic for multiple correct answers ---
         if user_answers == correct_answers:
             st.success("✅ Correct! You found both right answers.")
             for choice in scenario['choices']:
@@ -125,6 +121,13 @@ def display_question():
         st.button("Next Question", on_click=next_question)
 
 def display_results():
+    # --- SOLUTION: Add this check to prevent crashes ---
+    if 'score' not in st.session_state or 'user_name' not in st.session_state:
+        st.error("SESSION ERROR: Game state not found. Please start a new quiz.")
+        st.button("Play Again", on_click=restart_quiz)
+        return # Stop the function here to prevent the crash
+    # --- End of fix ---
+
     st.balloons()
     final_score = st.session_state.score
     user_name = st.session_state.user_name
