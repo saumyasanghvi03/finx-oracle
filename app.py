@@ -16,50 +16,58 @@ def setup_page():
     """Sets up the Streamlit page configuration."""
     st.set_page_config(
         page_title="FinX Trading Simulator",
-        page_icon="📈",
+        page_icon="💹",
         layout="centered"
     )
 
 def load_css():
-    """Injects custom CSS for a dark, trader-focused theme."""
+    """Injects custom CSS for a dark, red & green trader theme."""
     css = """
     <style>
     /* Main app background */
     .stApp {
-        background-color: #121212;
+        background-color: #111111;
         color: #E0E0E0;
     }
     /* Main content area */
     .main .block-container {
         background-color: #1E1E1E;
+        border: 1px solid #333;
         border-radius: 10px;
         padding: 2rem;
     }
     /* Buttons */
     .stButton>button {
-        border: 2px solid #00BFFF;
+        border: 2px solid #FFFFFF;
         background-color: transparent;
-        color: #00BFFF;
+        color: #FFFFFF;
         border-radius: 5px;
+        transition: all 0.2s;
     }
     .stButton>button:hover {
-        border-color: #FFFFFF;
-        background-color: #00BFFF;
+        border-color: #2E8B57; /* Green on hover */
+        background-color: #2E8B57;
         color: #FFFFFF;
     }
     /* Headers and Titles */
     h1, h2, h3 {
         color: #FFFFFF;
     }
-    /* Success/Profitable Trade */
+    /* Profitable Trade */
     .stAlert.st-alert.stSuccess {
-        background-color: rgba(46, 139, 87, 0.3);
-        border-left: 5px solid #2E8B57;
+        background-color: rgba(46, 139, 87, 0.2);
+        border-left: 6px solid #2E8B57; /* Stronger green */
+        color: #90EE90;
     }
-    /* Error/Trade Loss */
+    /* Trade Loss */
     .stAlert.st-alert.stError {
-        background-color: rgba(220, 20, 60, 0.3);
-        border-left: 5px solid #DC143C;
+        background-color: rgba(220, 20, 60, 0.2);
+        border-left: 6px solid #DC143C; /* Stronger red */
+        color: #F08080;
+    }
+    /* Metric styling */
+    [data-testid="stMetricValue"] {
+        color: #FFFFFF;
     }
     </style>
     """
@@ -92,12 +100,12 @@ def start_session():
 def new_trading_day():
     """Clears the session state to start a new day."""
     st.session_state.clear()
-    st.rerun()
+    # No st.rerun() needed here, as the button's on_click handles it.
 
 # --- UI Display Functions ---
 def display_login():
     """Displays the initial screen for trader to enter credentials."""
-    st.title("FinX Trading Simulator 📈")
+    st.title("FinX Trading Simulator 💹")
     st.markdown("Enter your credentials to access the trading terminal.")
     
     st.text_input("Trader Name", key="name_input")
@@ -151,9 +159,9 @@ def display_scenario():
         
         with col2:
             if user_choice_obj['correct']:
-                st.success(f"✅ Trade executed successfully. {user_choice_obj['feedback']}")
+                st.success(f"PROFIT. {user_choice_obj['feedback']}")
             else:
-                st.error(f"❌ Trade resulted in a loss. {user_choice_obj['feedback']}")
+                st.error(f"LOSS. {user_choice_obj['feedback']}")
 
         st.markdown(f"**Further Reading:** {scenario_data['project_link']}")
         
@@ -166,11 +174,10 @@ def display_scenario():
 
 def display_results():
     """Displays the End of Day report with performance metrics."""
-    # Add this check to prevent crashes from invalid session states
     if 'alpha' not in st.session_state or 'trader_name' not in st.session_state:
         st.error("SESSION ERROR: Game state not found. Please start a new session.")
         st.button("New Trading Day", on_click=new_trading_day)
-        return # Stop the function here to prevent the crash
+        return
 
     st.balloons()
     final_alpha = st.session_state.alpha
@@ -184,17 +191,15 @@ def display_results():
     st.title("End of Day Report 📝")
     st.markdown(f"### Performance Summary for **{trader_name}**")
     
-    # --- Performance Metrics Dashboard ---
     win_rate = (final_alpha / NUM_SCENARIOS) * 100
     col1, col2 = st.columns(2)
     with col1:
-        st.metric(label="Total Alpha Generated", value=f"{final_alpha}", help="Each correct decision generates 1 Alpha.")
+        st.metric(label="Total Alpha Generated", value=f"{final_alpha}")
     with col2:
-        st.metric(label="Win Rate", value=f"{win_rate:.1f}%", help="Percentage of profitable trades.")
+        st.metric(label="Win Rate", value=f"{win_rate:.1f}%")
     
     st.markdown("---")
 
-    # --- Trader ID Card ---
     st.subheader("Trader ID")
     col1, col2 = st.columns([1, 2])
     with col1:
@@ -203,9 +208,9 @@ def display_results():
             st.session_state.uploaded_image = uploaded_file
         
         if st.session_state.uploaded_image:
-            st.image(st.session_state.uploaded_image, width=150, caption="Trader Photo")
+            st.image(st.session_state.uploaded_image, width=150)
         else:
-            st.markdown("_Upload a photo to display on your ID._")
+            st.markdown("_Upload a photo._")
 
     with col2:
         st.text_input("Trader", value=trader_name, disabled=True)
@@ -231,7 +236,7 @@ def display_share_options(final_alpha):
     with col1:
         st.markdown("**1. Copy Post Text:**")
         post_text = (
-            f"Finished the day on the FinX Trading Simulator with {final_alpha} Alpha and a { (final_alpha / NUM_SCENARIOS) * 100 :.0f}% win rate. 📈\n\n"
+            f"Finished the day on the FinX Trading Simulator with {final_alpha} Alpha and a { (final_alpha / NUM_SCENARIOS) * 100 :.0f}% win rate. 💹\n\n"
             f"Challenging scenarios in AI, blockchain, and derivatives. Think you can do better?\n\n"
             f"#FinX #TradingSim #FinTech #Alpha"
         )
@@ -246,16 +251,17 @@ def display_share_options(final_alpha):
 
 # --- Leaderboard Logic ---
 def update_leaderboard(user, group, score):
-    """Adds a new entry to the leaderboard CSV file."""
+    """Adds or updates an entry in the leaderboard CSV file."""
     new_entry = pd.DataFrame([{'Trader': user, 'Desk': group, 'Alpha': score}])
     try:
         if not os.path.exists(LEADERBOARD_FILE):
             new_entry.to_csv(LEADERBOARD_FILE, index=False)
         else:
-            # Load existing, append, drop duplicates for the same trader, save
             df = pd.read_csv(LEADERBOARD_FILE)
+            # Remove old entry for the same trader if it exists
+            df = df[df['Trader'] != user]
+            # Add the new entry
             df = pd.concat([df, new_entry], ignore_index=True)
-            df.drop_duplicates(subset=['Trader', 'Desk'], keep='last', inplace=True)
             df.to_csv(LEADERBOARD_FILE, index=False)
     except Exception as e:
         st.error(f"Could not save score: {e}")
@@ -265,8 +271,6 @@ def display_leaderboard(desk_name):
     if os.path.exists(LEADERBOARD_FILE):
         try:
             leaderboard_df = pd.read_csv(LEADERBOARD_FILE)
-            # Rename columns for display
-            leaderboard_df.rename(columns={'Trader': 'Trader', 'Desk': 'Desk', 'Alpha': 'Alpha'}, inplace=True)
             desk_leaderboard = leaderboard_df[leaderboard_df['Desk'] == desk_name].sort_values(
                 by='Alpha', ascending=False
             ).reset_index(drop=True)
