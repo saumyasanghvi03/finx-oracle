@@ -29,21 +29,24 @@ def initialize_game_state():
         st.session_state.uploaded_image = None
         st.session_state.score_recorded = False
 
+def start_game():
+    """Function to handle the button click and update session state."""
+    if st.session_state.name_input and st.session_state.group_name_input:
+        st.session_state.user_name = st.session_state.name_input
+        st.session_state.group_name = st.session_state.group_name_input
+        st.session_state.game_state = "in_game"
+        st.rerun()
+    else:
+        st.warning("Please enter both your name and a group name to begin.")
+
 def display_name_input():
     st.title("Welcome to The FinX Oracle 🔮")
     st.markdown("Enter your name and a group name to begin your journey and compete with friends!")
     
-    user_name = st.text_input("Your Name", key="name_input")
-    group_name = st.text_input("Group Name (e.g., 'Team Apollo')", key="group_name")
+    st.text_input("Your Name", key="name_input")
+    st.text_input("Group Name (e.g., 'Team Apollo')", key="group_name_input")
     
-    if st.button("Start Challenge", key="start_button"):
-        if user_name and group_name:
-            st.session_state.user_name = user_name
-            st.session_state.group_name = group_name
-            st.session_state.game_state = "in_game"
-            st.rerun()
-        else:
-            st.warning("Please enter both your name and a group name to begin.")
+    st.button("Start Challenge", on_click=start_game, key="start_button")
 
 def display_scenario():
     current_index = st.session_state.current_scenario
@@ -83,21 +86,15 @@ def display_scenario():
                 break
 
 def update_leaderboard(user, group, score):
-    # Create the dataframe for the new entry
     new_entry = pd.DataFrame([{'User': user, 'Group': group, 'Score': score}])
-    
-    # Check if the leaderboard file exists
     if not os.path.exists(LEADERBOARD_FILE):
         new_entry.to_csv(LEADERBOARD_FILE, index=False)
     else:
-        # Append the new entry to the existing file
         new_entry.to_csv(LEADERBOARD_FILE, mode='a', header=False, index=False)
         
 def display_leaderboard(group_name):
-    # Read the leaderboard file
     if os.path.exists(LEADERBOARD_FILE):
         leaderboard_df = pd.read_csv(LEADERBOARD_FILE)
-        # Filter for the current group
         group_leaderboard = leaderboard_df[leaderboard_df['Group'] == group_name].sort_values(by='Score', ascending=False)
         
         st.markdown(f"### Current Leaderboard for '{group_name}'")
@@ -111,7 +108,6 @@ def display_results():
     user_name = st.session_state.user_name
     group_name = st.session_state.group_name
 
-    # Check if this user's score has been recorded yet
     if not st.session_state.score_recorded:
         update_leaderboard(user_name, group_name, final_insights)
         st.session_state.score_recorded = True
@@ -128,10 +124,8 @@ def display_results():
     st.markdown("---")
     st.subheader("Your Score Frame")
 
-    # Image uploader for the user's photo
     uploaded_file = st.file_uploader("Upload your photo for the frame", type=["png", "jpg", "jpeg"])
 
-    # Update the session state with the uploaded file
     if uploaded_file is not None:
         st.session_state.uploaded_image = uploaded_file
 
@@ -193,8 +187,6 @@ def main():
     if st.session_state.game_state == "name_input":
         display_name_input()
     elif st.session_state.game_state == "in_game":
-        st.header(f"The FinX Oracle: {st.session_state.user_name}")
-        st.markdown("---")
         display_scenario()
     elif st.session_state.game_state == "results":
         display_results()
