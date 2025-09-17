@@ -1,105 +1,6 @@
-import streamlit as st
-from scenarios import SCENARIOS
-import random
-import base64
-from io import BytesIO
-import pandas as pd
-import os
-
-# Number of questions per game
-NUM_QUESTIONS = 5
-LEADERBOARD_FILE = "leaderboard.csv"
-
-def setup_page():
-    st.set_page_config(
-        page_title="The FinX Oracle",
-        page_icon="🔮",
-        layout="centered"
-    )
-
-def initialize_game_state():
-    if "game_state" not in st.session_state:
-        st.session_state.game_state = "name_input"
-        st.session_state.user_name = ""
-        st.session_state.group_name = ""  # Initialize here to prevent the error
-        st.session_state.current_scenario = 0
-        st.session_state.insights = 0
-        st.session_state.scenarios = random.sample(SCENARIOS, NUM_QUESTIONS)
-        st.session_state.show_feedback = False
-        st.session_state.uploaded_image = None
-        st.session_state.score_recorded = False
-
-def start_game():
-    """Function to handle the button click and update session state."""
-    if st.session_state.name_input and st.session_state.group_name_input:
-        st.session_state.user_name = st.session_state.name_input
-        st.session_state.group_name = st.session_state.group_name_input
-        st.session_state.game_state = "in_game"
-    else:
-        st.warning("Please enter both your name and a group name to begin.")
-
-def display_name_input():
-    st.title("Welcome to The FinX Oracle 🔮")
-    st.markdown("Enter your name and a group name to begin your journey and compete with friends!")
-    
-    st.text_input("Your Name", key="name_input")
-    st.text_input("Group Name (e.g., 'Team Apollo')", key="group_name_input")
-    
-    st.button("Start Challenge", on_click=start_game, key="start_button")
-
-def display_scenario():
-    current_index = st.session_state.current_scenario
-    if current_index >= NUM_QUESTIONS:
-        st.session_state.game_state = "results"
-        st.rerun()
-        return
-
-    scenario_data = st.session_state.scenarios[current_index]
-
-    st.header(f"Oracle's Challenge #{current_index + 1}/{NUM_QUESTIONS}: {scenario_data['title']}")
-    st.markdown(f"**Scenario:** *{scenario_data['description']}*")
-    st.markdown("---")
-
-    selected_choice = st.radio("Your Decision:", [choice['text'] for choice in scenario_data['choices']], key=f"scenario_{current_index}")
-    
-    if st.button("Commit Decision", key=f"submit_{current_index}"):
-        st.session_state.show_feedback = True
-        for choice in scenario_data['choices']:
-            if selected_choice == choice['text']:
-                if choice['correct']:
-                    st.session_state.insights += 1
-                break
-        st.rerun()
-
-    if st.session_state.show_feedback:
-        for choice in scenario_data['choices']:
-            if selected_choice == choice['text']:
-                if choice['correct']:
-                    st.success(f"🔮 Insight Gained! {choice['feedback']}")
-                else:
-                    st.error(f"❌ Missed Insight. {choice['feedback']}")
-                
-                st.markdown(f"---")
-                st.markdown(f"**Learn more:** Check out the project at: {scenario_data['project_link']}")
-                st.button("Next Question", on_click=lambda: (st.session_state.update(current_scenario=current_index + 1, show_feedback=False)), key=f"next_{current_index}")
-                break
-
-def update_leaderboard(user, group, score):
-    new_entry = pd.DataFrame([{'User': user, 'Group': group, 'Score': score}])
-    if not os.path.exists(LEADERBOARD_FILE):
-        new_entry.to_csv(LEADERBOARD_FILE, index=False)
-    else:
-        new_entry.to_csv(LEADERBOARD_FILE, mode='a', header=False, index=False)
-        
-def display_leaderboard(group_name):
-    if os.path.exists(LEADERBOARD_FILE):
-        leaderboard_df = pd.read_csv(LEADERBOARD_FILE)
-        group_leaderboard = leaderboard_df[leaderboard_df['Group'] == group_name].sort_values(by='Score', ascending=False)
-        
-        st.markdown(f"### Current Leaderboard for '{group_name}'")
-        st.dataframe(group_leaderboard, hide_index=True)
-    else:
-        st.markdown("No scores yet for this group. Be the first to play!")
+def restart_game():
+    """Clears the session state to restart the game."""
+    st.session_state.clear()
 
 def display_results():
     st.balloons()
@@ -177,18 +78,5 @@ def display_results():
     st.markdown("---")
     display_leaderboard(group_name)
 
-    st.button("Restart Journey", on_click=lambda: (st.session_state.clear(), st.experimental_rerun()))
-
-def main():
-    setup_page()
-    initialize_game_state()
-
-    if st.session_state.game_state == "name_input":
-        display_name_input()
-    elif st.session_state.game_state == "in_game":
-        display_scenario()
-    elif st.session_state.game_state == "results":
-        display_results()
-
-if __name__ == "__main__":
-    main()
+    # *** CHANGED LINE ***
+    st.button("Restart Journey", on_click=restart_game)
