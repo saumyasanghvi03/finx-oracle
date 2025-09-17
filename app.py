@@ -1,7 +1,6 @@
 import streamlit as st
 from scenarios import SCENARIOS # Make sure you have a scenarios.py file
 import random
-import base64
 from io import BytesIO
 import pandas as pd
 import os
@@ -27,7 +26,7 @@ def load_css():
     /* Main app background */
     .stApp {
         background-color: #111111;
-        color: #E0E0E0;
+        color: #FFFFFF; /* Brighter text for better readability */
     }
     /* Main content area */
     .main .block-container {
@@ -57,13 +56,13 @@ def load_css():
     .stAlert.st-alert.stSuccess {
         background-color: rgba(46, 139, 87, 0.2);
         border-left: 6px solid #2E8B57; /* Stronger green */
-        color: #90EE90;
+        color: #FFFFFF;
     }
     /* Trade Loss */
     .stAlert.st-alert.stError {
         background-color: rgba(220, 20, 60, 0.2);
         border-left: 6px solid #DC143C; /* Stronger red */
-        color: #F08080;
+        color: #FFFFFF;
     }
     /* Metric styling */
     [data-testid="stMetricValue"] {
@@ -76,14 +75,22 @@ def load_css():
 
 # --- Game State Management ---
 def initialize_game_state():
-    """Initializes the session state for a new trading day."""
+    """Initializes the session state and randomizes scenarios and choices."""
     if "game_state" not in st.session_state:
         st.session_state.game_state = "login"
         st.session_state.trader_name = ""
         st.session_state.desk_name = ""
         st.session_state.current_scenario = 0
         st.session_state.alpha = 0
-        st.session_state.scenarios = random.sample(SCENARIOS, NUM_SCENARIOS)
+        
+        # 1. Get a random sample of scenarios (random questions)
+        scenarios_sample = random.sample(SCENARIOS, NUM_SCENARIOS)
+        
+        # 2. For each chosen scenario, shuffle its choices (random options)
+        for scenario in scenarios_sample:
+            random.shuffle(scenario['choices']) 
+            
+        st.session_state.scenarios = scenarios_sample
         st.session_state.show_feedback = False
         st.session_state.uploaded_image = None
         st.session_state.score_recorded = False
@@ -100,8 +107,7 @@ def start_session():
 def new_trading_day():
     """Clears the session state to start a new day."""
     st.session_state.clear()
-    # No st.rerun() needed here, as the button's on_click handles it.
-
+    
 # --- UI Display Functions ---
 def display_login():
     """Displays the initial screen for trader to enter credentials."""
@@ -171,7 +177,6 @@ def display_scenario():
         
         st.button("Next Scenario", on_click=next_scenario, key=f"next_{current_index}")
 
-
 def display_results():
     """Displays the End of Day report with performance metrics."""
     if 'alpha' not in st.session_state or 'trader_name' not in st.session_state:
@@ -228,7 +233,6 @@ def display_results():
     display_leaderboard(desk_name)
 
     st.button("New Trading Day", on_click=new_trading_day)
-
 
 def display_share_options(final_alpha):
     """Displays sharing options for X (Twitter) / Threads."""
