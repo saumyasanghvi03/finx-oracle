@@ -1,6 +1,9 @@
 import streamlit as st
 from scenarios import SCENARIOS
 import random
+import base64
+from PIL import Image
+from io import BytesIO
 
 # Number of questions per game
 NUM_QUESTIONS = 5
@@ -21,6 +24,7 @@ def initialize_game_state():
         # Select 5 random scenarios from the total pool of 20
         st.session_state.scenarios = random.sample(SCENARIOS, NUM_QUESTIONS)
         st.session_state.show_feedback = False
+        st.session_state.uploaded_image = None
 
 def display_name_input():
     st.title("Welcome to The FinX Oracle 🔮")
@@ -89,15 +93,36 @@ def display_results():
 
     st.markdown("---")
     st.subheader("Your Score Frame")
-    st.info("Take a screenshot of this frame and add your photo to share on LinkedIn!")
 
+    # Image uploader for the user's photo
+    uploaded_file = st.file_uploader("Upload your photo for the frame", type=["png", "jpg", "jpeg"])
+    
+    if uploaded_file is not None:
+        st.session_state.uploaded_image = uploaded_file
+        # Convert the uploaded image to a base64 string for embedding in HTML
+        uploaded_image_bytes = BytesIO(st.session_state.uploaded_image.getvalue())
+        uploaded_image_b64 = base64.b64encode(uploaded_image_bytes.read()).decode('utf-8')
+        image_src = f"data:image/jpeg;base64,{uploaded_image_b64}"
+        # Use HTML to display the uploaded image with a circular crop
+        image_html = f"""
+            <div style='height: 150px; width: 150px; margin: 20px auto; border-radius: 50%; border: 3px solid #5C6AC4; overflow: hidden; display: flex; align-items: center; justify-content: center;'>
+                <img src='{image_src}' style='width: 100%; height: 100%; object-fit: cover;'>
+            </div>
+        """
+    else:
+        # Placeholder HTML when no image is uploaded
+        image_html = """
+            <div style='height: 150px; width: 150px; margin: 20px auto; background-color: #D3D3D3; border-radius: 50%; border: 3px solid #5C6AC4;'>
+                <p style='padding-top: 60px; font-size: 0.9em; color: #555; text-align: center;'>Add Your Photo Here</p>
+            </div>
+        """
+
+    # Combine the dynamic image HTML with the static frame
     st.markdown(
         f"""
         <div style='text-align: center; padding: 20px; border: 4px solid #5C6AC4; border-radius: 15px; background-color: #F0F2F6; box-shadow: 0 4px 8px rgba(0,0,0,0.1);'>
             <h2 style='color: #2D2D2D;'>FinX Oracle: Final Score</h2>
-            <div style='height: 150px; width: 150px; margin: 20px auto; background-color: #D3D3D3; border-radius: 50%; border: 3px solid #5C6AC4;'>
-                <p style='padding-top: 60px; font-size: 0.9em; color: #555;'>Add Your Photo Here</p>
-            </div>
+            {image_html}
             <h1 style='font-size: 3em; color: #5C6AC4;'>{final_insights}/{NUM_QUESTIONS}</h1>
             <p style='font-size: 1.2em; color: #555;'>- {user_name}</p>
         </div>
@@ -105,7 +130,12 @@ def display_results():
         unsafe_allow_html=True
     )
     
-    st.markdown("### Ready to share on LinkedIn?")
+    st.info("Take a screenshot of the frame above to share on LinkedIn!")
+    st.markdown("### Share on LinkedIn")
+    st.markdown("1. Copy the text below.")
+    st.markdown("2. Click the button to open LinkedIn.")
+    st.markdown("3. Paste the text into your new post.")
+
     linkedin_post_text = (
         f"I just completed the FinX Oracle challenge at the FinX Institute new campus launch! My financial foresight was "
         f"tested on real-world scenarios in blockchain, AI, and derivatives. "
@@ -114,8 +144,9 @@ def display_results():
         f"#FinXInstitute #FinTech #FinXOracle #FinancialInnovation #CampusLaunch"
     )
     st.code(linkedin_post_text, language='text')
-    st.markdown("_(Copy the text above and paste it directly into a new LinkedIn post.)_")
 
+    st.link_button("Create My LinkedIn Post", "https://www.linkedin.com/feed/?shareActive=true")
+    
     st.button("Restart Journey", on_click=lambda: (st.session_state.clear(), st.rerun()))
 
 def main():
