@@ -3,7 +3,6 @@ from scenarios import SCENARIOS
 import random
 import base64
 from io import BytesIO
-from PIL import Image
 import pandas as pd
 import os
 
@@ -22,12 +21,13 @@ def initialize_game_state():
     if "game_state" not in st.session_state:
         st.session_state.game_state = "name_input"
         st.session_state.user_name = ""
-        st.session_state.group_name = ""
+        st.session_state.group_name = ""  # Initialize group_name here
         st.session_state.current_scenario = 0
         st.session_state.insights = 0
         st.session_state.scenarios = random.sample(SCENARIOS, NUM_QUESTIONS)
         st.session_state.show_feedback = False
         st.session_state.uploaded_image = None
+        st.session_state.score_recorded = False
 
 def display_name_input():
     st.title("Welcome to The FinX Oracle 🔮")
@@ -112,7 +112,7 @@ def display_results():
     group_name = st.session_state.group_name
 
     # Check if this user's score has been recorded yet
-    if 'score_recorded' not in st.session_state:
+    if not st.session_state.score_recorded:
         update_leaderboard(user_name, group_name, final_insights)
         st.session_state.score_recorded = True
 
@@ -128,22 +128,26 @@ def display_results():
     st.markdown("---")
     st.subheader("Your Score Frame")
 
+    # Image uploader for the user's photo
     uploaded_file = st.file_uploader("Upload your photo for the frame", type=["png", "jpg", "jpeg"])
+
+    # Update the session state with the uploaded file
     if uploaded_file is not None:
         st.session_state.uploaded_image = uploaded_file
 
-    image_html = """
-        <div style='height: 150px; width: 150px; margin: 20px auto; background-color: #D3D3D3; border-radius: 50%; border: 3px solid #5C6AC4;'>
-            <p style='padding-top: 60px; font-size: 0.9em; color: #555; text-align: center;'>Add Your Photo Here</p>
-        </div>
-    """
-    if st.session_state.uploaded_image:
+    if st.session_state.uploaded_image is not None:
         uploaded_image_bytes = BytesIO(st.session_state.uploaded_image.getvalue())
         uploaded_image_b64 = base64.b64encode(uploaded_image_bytes.read()).decode('utf-8')
         image_src = f"data:image/jpeg;base64,{uploaded_image_b64}"
         image_html = f"""
             <div style='height: 150px; width: 150px; margin: 20px auto; border-radius: 50%; border: 3px solid #5C6AC4; overflow: hidden; display: flex; align-items: center; justify-content: center;'>
                 <img src='{image_src}' style='width: 100%; height: 100%; object-fit: cover;'>
+            </div>
+        """
+    else:
+        image_html = """
+            <div style='height: 150px; width: 150px; margin: 20px auto; background-color: #D3D3D3; border-radius: 50%; border: 3px solid #5C6AC4;'>
+                <p style='padding-top: 60px; font-size: 0.9em; color: #555; text-align: center;'>Add Your Photo Here</p>
             </div>
         """
 
