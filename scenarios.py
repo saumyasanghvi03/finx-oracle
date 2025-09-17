@@ -1,4 +1,5 @@
 # scenarios.py
+
 SCENARIOS = [
     # --- Fintech Questions (20) ---
     {
@@ -495,7 +496,7 @@ SCENARIOS = [
             {"text": "A government savings bond.", "correct": False, "feedback": "Incorrect. Government bonds are a core traditional asset class."}
         ]
     },
-    
+
     # --- General Knowledge (GK) Questions (10) ---
     {
         "title": "GK: Global Supply Chains",
