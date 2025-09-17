@@ -5,6 +5,7 @@ import base64
 from io import BytesIO
 import pandas as pd
 import os
+from urllib.parse import quote # IMPORT THIS LINE
 
 # --- Constants ---
 NUM_QUESTIONS = 5
@@ -45,7 +46,7 @@ def start_game():
 def restart_game():
     """Clears the session state to restart the game."""
     st.session_state.clear()
-    st.rerun() # Use st.rerun() for a clean restart
+    st.rerun()
 
 # --- UI Display Functions ---
 def display_name_input():
@@ -72,7 +73,6 @@ def display_scenario():
     st.markdown(f"**Scenario:** *{scenario_data['description']}*")
     st.markdown("---")
 
-    # Disable the radio button and commit button after feedback is shown
     is_disabled = st.session_state.show_feedback
     
     selected_choice = st.radio(
@@ -91,7 +91,6 @@ def display_scenario():
             st.rerun()
 
     if st.session_state.show_feedback:
-        # Re-find the selected choice to display feedback
         user_choice_obj = next((c for c in scenario_data['choices'] if c['text'] == selected_choice), None)
         if user_choice_obj:
             if user_choice_obj['correct']:
@@ -139,8 +138,8 @@ def display_results():
     image_html = get_image_frame_html()
     st.markdown(image_html, unsafe_allow_html=True)
     
-    st.info("To share your result on LinkedIn, follow these two steps:")
-    display_share_options(final_insights, user_name)
+    st.info("Share your result on social media!")
+    display_share_options(final_insights, user_name) # THIS FUNCTION IS NOW UPDATED
 
     st.markdown("---")
     display_leaderboard(group_name)
@@ -169,22 +168,26 @@ def get_image_frame_html():
     """
 
 def display_share_options(final_insights, user_name):
-    """Displays the LinkedIn sharing text and button."""
+    """Displays the X (Twitter) / Threads sharing text and button."""
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("**1. Copy this post text:**")
-        linkedin_post_text = (
-            f"I just completed the FinX Oracle challenge at the FinX Institute new campus launch! My financial foresight was "
-            f"tested on real-world scenarios in blockchain, AI, and derivatives. "
-            f"I scored {final_insights}/{NUM_QUESTIONS} Oracle's Insights. \n\n"
-            f"What do you think of my score? Let's connect on the future of FinTech. "
-            f"#FinXInstitute #FinTech #FinXOracle #FinancialInnovation #CampusLaunch"
+        # Shorter text suitable for Twitter and Threads
+        post_text = (
+            f"I just scored {final_insights}/{NUM_QUESTIONS} on the FinX Oracle challenge! 🔮\n\n"
+            f"Testing my knowledge on real-world scenarios in blockchain, AI, and derivatives. How would you score?\n\n"
+            f"#FinXInstitute #FinTech #FinXOracle #AI"
         )
-        st.code(linkedin_post_text, language='text')
+        st.code(post_text, language='text')
 
     with col2:
-        st.markdown("**2. Click here & paste the text:**")
-        st.link_button("Create My LinkedIn Post", "https://www.linkedin.com/feed/?shareActive=true")
+        st.markdown("**2. Click here to post:**")
+        # URL-encode the text for the Twitter share link
+        encoded_text = quote(post_text)
+        twitter_url = f"https://twitter.com/intent/tweet?text={encoded_text}"
+        
+        st.link_button("Post on X (Twitter)", twitter_url)
+        st.markdown("Or, copy the text and post on **Threads**!")
 
 # --- Leaderboard Logic ---
 def update_leaderboard(user, group, score):
