@@ -9,29 +9,13 @@ import os
 NUM_QUESTIONS = 5
 LEADERBOARD_FILE = "leaderboard.csv"
 
-# --- Page Setup & Styling ---
+# --- Page Setup ---
 def setup_page():
     st.set_page_config(
         page_title="FinX Oracle",
         page_icon="🔮",
         layout="centered"
     )
-
-def load_css():
-    """Injects custom CSS for a dark, red & green trader theme."""
-    css = """
-    <style>
-    .stApp { background-color: #111111; color: #FFFFFF; }
-    .main .block-container { background-color: #1E1E1E; border: 1px solid #333; border-radius: 10px; padding: 2rem; }
-    .stButton>button { border: 2px solid #FFFFFF; background-color: transparent; color: #FFFFFF; border-radius: 5px; transition: all 0.2s; }
-    .stButton>button:hover { border-color: #2E8B57; background-color: #2E8B57; color: #FFFFFF; }
-    h1, h2, h3 { color: #FFFFFF; }
-    .stAlert.st-alert.stSuccess { background-color: rgba(46, 139, 87, 0.2); border-left: 6px solid #2E8B57; color: #90EE90; }
-    .stAlert.st-alert.stError { background-color: rgba(220, 20, 60, 0.2); border-left: 6px solid #DC143C; color: #F08080; }
-    [data-testid="stMetricValue"] { color: #FFFFFF; }
-    </style>
-    """
-    st.markdown(css, unsafe_allow_html=True)
 
 # --- Game State Management ---
 def initialize_state():
@@ -43,22 +27,21 @@ def initialize_state():
         st.session_state.score = 0
         st.session_state.show_feedback = False
         
-        # --- Randomization Logic ---
-        # 1. Separate questions into categories from the full pool
+        # --- 2:2:1 Ratio Logic ---
         fintech_questions = [q for q in SCENARIOS if q['category'] == 'fintech']
         general_finance_questions = [q for q in SCENARIOS if q['category'] == 'general_finance']
         gk_questions = [q for q in SCENARIOS if q['category'] == 'gk']
 
-        # 2. Select a 2:2:1 ratio of questions
+        # Sample 2 fintech, 2 finance, and 1 GK question
         selected_fintech = random.sample(fintech_questions, min(2, len(fintech_questions)))
         selected_general = random.sample(general_finance_questions, min(2, len(general_finance_questions)))
         selected_gk = random.sample(gk_questions, min(1, len(gk_questions)))
 
-        # 3. Combine and shuffle the final list for the user
+        # Combine and shuffle the final list
         scenarios_sample = selected_fintech + selected_general + selected_gk
         random.shuffle(scenarios_sample)
             
-        # 4. For each chosen question, shuffle its answer options
+        # For each chosen question, shuffle its answer options
         for scenario in scenarios_sample:
             random.shuffle(scenario['choices']) 
             
@@ -170,15 +153,28 @@ def display_results():
 
 # --- Leaderboard Logic ---
 def update_leaderboard(player, team, score):
+    """Adds or updates an entry, handling old/corrupt CSV files."""
     new_entry = pd.DataFrame([{'Player': player, 'Team': team, 'Score': score}])
-    if not os.path.exists(LEADERBOARD_FILE):
-        new_entry.to_csv(LEADERBOARD_FILE, index=False)
+    required_columns = ['Player', 'Team', 'Score']
+
+    if os.path.exists(LEADERBOARD_FILE):
+        try:
+            df = pd.read_csv(LEADERBOARD_FILE)
+            # If columns are not what we expect, the file is outdated.
+            if list(df.columns) != required_columns:
+                raise ValueError("Incorrect column format")
+            
+            # Remove old entry for the same player before adding new one
+            df = df[df['Player'] != player]
+            df = pd.concat([df, new_entry], ignore_index=True)
+            df.to_csv(LEADERBOARD_FILE, index=False)
+        except (ValueError, pd.errors.EmptyDataError):
+            # If file is malformed, empty, or has wrong columns, overwrite it.
+            new_entry.to_csv(LEADERBOARD_FILE, index=False)
     else:
-        df = pd.read_csv(LEADERBOARD_FILE)
-        # Remove old entry for the same player before adding new one
-        df = df[df['Player'] != player]
-        df = pd.concat([df, new_entry], ignore_index=True)
-        df.to_csv(LEADERBOARD_FILE, index=False)
+        # If file doesn't exist, create it.
+        new_entry.to_csv(LEADERBOARD_FILE, index=False)
+
 
 def display_leaderboard(current_team_name):
     if not os.path.exists(LEADERBOARD_FILE):
@@ -186,7 +182,16 @@ def display_leaderboard(current_team_name):
         st.write("Be the first to set a score!")
         return
 
-    df = pd.read_csv(LEADERBOARD_FILE)
+    try:
+        df = pd.read_csv(LEADERBOARD_FILE)
+        if df.empty:
+            st.subheader("Leaderboard")
+            st.write("Be the first to set a score!")
+            return
+    except (FileNotFoundError, pd.errors.EmptyDataError):
+        st.subheader("Leaderboard")
+        st.write("Be the first to set a score!")
+        return
 
     # --- Team Leaderboard (based on Average Score) ---
     st.subheader("🏆 Team Leaderboard")
@@ -205,7 +210,6 @@ def display_leaderboard(current_team_name):
 # --- Main App ---
 def main():
     setup_page()
-    load_css()
     initialize_state()
 
     if st.session_state.game_state == "name_input":
