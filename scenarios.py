@@ -1,18 +1,7 @@
 # scenarios.py
-import random
 
 SCENARIOS = [
-    {
-        "title": "Fintech: 'Buy Now, Pay Later' (BNPL)",
-        "description": "Which two statements are true about the primary business model of 'Buy Now, Pay Later' (BNPL) services?",
-        "category": "fintech",
-        "references": "- **Concept:** [Buy Now, Pay Later (BNPL)](https://www.investopedia.com/buy-now-pay-later-5182291)",
-        "choices": [
-            {"text": "They earn revenue from fees charged t# scenarios.py
-import random
-
-SCENARIOS = [
-    # --- Fintech Questions (10) ---
+    # --- Fintech Questions (20) ---
     {
         "title": "Fintech: Central Bank Digital Currencies (CBDCs)",
         "description": "*Global Mini Highlight: India's Digital Rupee and China's Digital Yuan have seen significant retail adoption by late 2025.*\n\nWhat are two key differences between a government-issued CBDC and a decentralized cryptocurrency like Bitcoin?",
@@ -113,7 +102,7 @@ SCENARIOS = [
         "title": "Fintech: Insurtech",
         "description": "*Global Mini Highlight: Parametric insurance, powered by Insurtech, has become a popular product for climate-related risks in 2025.*\n\nWhich two are common applications of 'Insurtech'?",
         "category": "fintech",
-        "references": "- **Industry:** [Insurtech](https://www.investopedia.com/terms/i/insurtech.asp)",
+        "references": "- **Industry:** [Insurtech](https.www.investopedia.com/terms/i/insurtech.asp)",
         "choices": [
             {"text": "Using telematics data from a car to determine auto insurance premiums.", "correct": True, "feedback": "This is a prime example of using real-time data to price risk more accurately."},
             {"text": "Automating claims processing using AI and photos from a smartphone.", "correct": True, "feedback": "This speeds up the claims process from weeks to minutes for simple cases."},
@@ -133,42 +122,174 @@ SCENARIOS = [
             {"text": "To convert cryptocurrency into physical cash.", "correct": False, "feedback": "Staking is an on-chain activity and is unrelated to cashing out."}
         ]
     },
-    
-    # --- Finance & Stock Market Questions (10) ---
     {
-        "title": "Finance: Inflation and Interest Rates",
-        "description": "*Global Mini Highlight: The RBI has held the repo rate steady at a high level throughout 2025 to combat persistent inflation from the early 2020s.*\n\nIn this high-interest-rate environment, what are two likely outcomes?",
-        "category": "general_finance",
-        "references": "- **Concept:** [Interest Rates & Inflation](https://www.investopedia.com/articles/investing/010616/understanding-interest-rates-inflation-and-federal-reserve.asp)",
+        "title": "Fintech: Digital Wallets",
+        "description": "*Global Mini Highlight: In 2025, digital wallets in India have expanded to include features like automatic toll payments and integrated metro transit passes.*\n\nWhat are two key features of modern digital wallets?",
+        "category": "fintech",
+        "references": "- **Technology:** [Digital Wallet](https://www.investopedia.com/terms/d/digital-wallet.asp)",
         "choices": [
-            {"text": "The cost of borrowing for companies and consumers is high.", "correct": True, "feedback": "Correct. High central bank rates directly translate to higher loan rates for mortgages, cars, and businesses."},
-            {"text": "The prices of previously issued bonds with low interest rates are down.", "correct": True, "feedback": "Correct. Why buy an old bond paying 4% when new bonds pay 6%? The old bond's price must fall to be competitive."},
-            {"text": "The stock market is guaranteed to reach new all-time highs.", "correct": False, "feedback": "Incorrect. High rates often act as a headwind for the stock market, as it makes borrowing more expensive and bonds more attractive."},
-            {"text": "The inflation rate is guaranteed to be 0%.", "correct": False, "feedback": "Incorrect. The goal is to control inflation, but it doesn't guarantee it will fall to zero."}
+            {"text": "They use tokenization to protect actual card numbers during transactions.", "correct": True, "feedback": "Tokenization replaces your sensitive card data with a unique, temporary token for each transaction, enhancing security."},
+            {"text": "They enable contactless payments using NFC technology.", "correct": True, "feedback": "Near Field Communication (NFC) allows you to pay by simply tapping your device on a compatible terminal."},
+            {"text": "They are required by law to print a paper receipt for every transaction.", "correct": False, "feedback": "Digital wallets are designed to reduce paper and provide digital receipts."},
+            {"text": "They can only be used to purchase items from a single brand.", "correct": False, "feedback": "They are designed to be used at a wide variety of merchants who accept contactless payments."}
         ]
     },
     {
-        "title": "Finance: Diversification Strategies",
-        "description": "*Global Mini Highlight: After the AI-stock bubble of 2024, investors in 2025 are increasingly focused on portfolio resilience.*\n\nWhat are two effective methods for diversifying an investment portfolio?",
-        "category": "general_finance",
-        "references": "- **Strategy:** [Diversification](https://www.investopedia.com/terms/d/diversification.asp)",
+        "title": "Fintech: RegTech",
+        "description": "*Global Mini Highlight: Banks in 2025 are using RegTech to automate their climate risk disclosure reports, a new regulatory requirement.*\n\nWhat are two primary goals of Regulatory Technology (RegTech)?",
+        "category": "fintech",
+        "references": "- **Industry:** [RegTech](https://www.investopedia.com/terms/r/regtech.asp)",
         "choices": [
-            {"text": "Investing across different asset classes, such as stocks, bonds, and real estate.", "correct": True, "feedback": "Correct. Different asset classes often perform differently in various market conditions, which smooths out returns."},
-            {"text": "Investing across different geographic regions, such as India, the US, and Europe.", "correct": True, "feedback": "Correct. Geographic diversification reduces the risk of a downturn in any single country's economy affecting your entire portfolio."},
-            {"text": "Investing all your capital in the five largest technology stocks.", "correct": False, "feedback": "Incorrect. This is concentration in a single sector, which is the opposite of diversification."},
-            {"text": "Putting all your money into a single high-growth startup.", "correct": False, "feedback": "Incorrect. This is an extremely concentrated and high-risk strategy."}
+            {"text": "To help financial institutions comply with regulations more efficiently and cheaply.", "correct": True, "feedback": "RegTech automates compliance tasks, reducing manual effort and cost."},
+            {"text": "To monitor transactions in real-time to identify potential fraud or money laundering.", "correct": True, "feedback": "Automated monitoring of Anti-Money Laundering (AML) and Know Your Customer (KYC) rules is a core function."},
+            {"text": "To help individuals avoid paying taxes.", "correct": False, "feedback": "RegTech is designed to enhance compliance with laws, not to evade them."},
+            {"text": "To replace financial regulators like the SEBI with AI.", "correct": False, "feedback": "RegTech is a tool used by companies to comply with regulators, not to replace the regulators themselves."}
         ]
     },
     {
-        "title": "Stock Market: Fundamental Analysis",
-        "description": "*Global Mini Highlight: The market in 2025 is rewarding profitable companies over speculative growth stories.*\n\nWhen conducting fundamental analysis, what are two key metrics an investor would examine?",
-        "category": "general_finance",
-        "references": "- **Concept:** [Fundamental Analysis](https://www.investopedia.com/articles/investing/052813/fundamental-vs-technical-analysis.asp)",
+        "title": "Fintech: DAOs",
+        "description": "*Global Mini Highlight: A prominent venture capital fund in 2025 restructured into a DAO to allow its portfolio companies a say in governance.*\n\nWhat are two characteristics of a DAO?",
+        "category": "fintech",
+        "references": "- **Concept:** [DAO](https://www.investopedia.com/decentralized-autonomous-organization-dao-5214422)",
         "choices": [
-            {"text": "The company's Price-to-Earnings (P/E) ratio to assess its valuation.", "correct": True, "feedback": "Correct. The P/E ratio is a classic metric to understand how the market values a company relative to its profits."},
-            {"text": "The company's Debt-to-Equity ratio to assess its financial risk.", "correct": True, "feedback": "Correct. This ratio shows how much leverage a company is using, which is a key indicator of its financial stability."},
-            {"text": "The shape of the stock's price chart over the last 50 days.", "correct": False, "feedback": "Incorrect. Analyzing chart patterns is part of technical analysis, not fundamental analysis."},
-            {"text": "The number of times the CEO has appeared on television.", "correct": False, "feedback": "Incorrect. While CEO visibility can affect sentiment, it is not a core financial metric."}
+            {"text": "It is governed by rules encoded as smart contracts on a blockchain.", "correct": True, "feedback": "The rules are transparent and automatically enforced by code."},
+            {"text": "Decisions are typically made collectively by the members through voting.", "correct": True, "feedback": "This provides a democratic and decentralized governance structure."},
+            {"text": "It has a traditional corporate structure with a CEO and board of directors.", "correct": False, "feedback": "A DAO is designed to be 'flat' and community-governed, replacing the need for a traditional hierarchy."},
+            {"text": "It is registered and headquartered in a specific physical country.", "correct": False, "feedback": "DAOs are internet-native organizations that can operate without a physical headquarters or specific jurisdiction."}
+        ]
+    },
+    {
+        "title": "Fintech: Stablecoins",
+        "description": "*Global Mini Highlight: The circulation of regulated, fully-backed stablecoins surpassed $500 billion in 2025.*\n\nWhat are two primary functions of 'stablecoins' in the crypto ecosystem?",
+        "category": "fintech",
+        "references": "- **Asset:** [Stablecoin](https://www.investopedia.com/terms/s/stablecoin.asp)",
+        "choices": [
+            {"text": "To act as a stable store of value, pegged to an asset like the US dollar or Rupee.", "correct": True, "feedback": "This allows crypto traders to avoid volatility without cashing out to fiat."},
+            {"text": "To serve as a reliable medium of exchange for trading and DeFi applications.", "correct": True, "feedback": "They are a common unit of account on crypto platforms, making it easier to trade and price digital assets."},
+            {"text": "To provide the highest possible investment returns in crypto.", "correct": False, "feedback": "Their goal is stability, not high returns. They are designed to hold a steady value."},
+            {"text": "To ensure complete and untraceable anonymity for all transactions.", "correct": False, "feedback": "Major stablecoins like USDC and USDT operate with a high degree of transparency."}
+        ]
+    },
+    {
+        "title": "Fintech: AI in Credit Scoring",
+        "description": "*Global Mini Highlight: In India, by 2025, many lenders use AI models that analyze alternative data (like utility payments) for credit scoring.*\n\nWhat are two benefits of using AI in credit scoring?",
+        "category": "fintech",
+        "references": "- **Concept:** [Alternative Data](https://www.investopedia.com/terms/a/alternative-data.asp)",
+        "choices": [
+            {"text": "It can increase financial inclusion by scoring people without a traditional credit history.", "correct": True, "feedback": "Correct. AI can find patterns in other data to assess creditworthiness for the 'unbanked' or 'underbanked'."},
+            {"text": "It can potentially create more accurate and predictive risk models than traditional methods.", "correct": True, "feedback": "Correct. By analyzing more variables, AI can identify subtle patterns of risk that older models might miss."},
+            {"text": "It guarantees that no borrower will ever default on a loan.", "correct": False, "feedback": "Incorrect. It aims to better predict the probability of default, but it cannot eliminate the risk entirely."},
+            {"text": "It makes all loan applications require a physical interview.", "correct": False, "feedback": "Incorrect. It enables a more automated, digital-first application process."}
+        ]
+    },
+    {
+        "title": "Fintech: Cross-Border Payments",
+        "description": "*Global Mini Highlight: By 2025, fintech solutions using blockchain have reduced the average cost of international remittances by 40% compared to 2020 levels.*\n\nWhat are two main problems with traditional cross-border payments that fintech aims to solve?",
+        "category": "fintech",
+        "references": "- **Industry:** [Cross-Border Payments](https://www.forbes.com/advisor/money-transfer/best-ways-to-send-money-internationally/)",
+        "choices": [
+            {"text": "High fees charged by intermediary banks.", "correct": True, "feedback": "Correct. Traditional systems like SWIFT involve multiple banks, each taking a fee, making remittances expensive."},
+            {"text": "Slow settlement times, often taking several business days.", "correct": True, "feedback": "Correct. Fintech solutions can offer near-instant settlement, compared to the slow pace of legacy systems."},
+            {"text": "They can only be sent during normal business hours.", "correct": False, "feedback": "While settlement might be slow, the initiation can often be done 24/7 online. Fintech makes the whole process 24/7."},
+            {"text": "They are not available for amounts less than $10,000.", "correct": False, "feedback": "Incorrect. Small remittances are very common, but they are often subject to disproportionately high fees."}
+        ]
+    },
+    {
+        "title": "Fintech: Account Aggregators",
+        "description": "*Global Mini Highlight: India's Account Aggregator (AA) network has become a model for secure financial data sharing, with over 100 million users by 2025.*\n\nWhat are two functions of an Account Aggregator?",
+        "category": "fintech",
+        "references": "- **Framework:** [Account Aggregator India](https://sahamati.org.in/what-is-aa/)",
+        "choices": [
+            {"text": "To allow a user to securely share their financial data from one institution with another.", "correct": True, "feedback": "Correct. It acts as a 'consent manager' for data sharing, without seeing the data itself."},
+            {"text": "To enable easier access to credit by providing a consolidated financial view to lenders.", "correct": True, "feedback": "Correct. Users can share their complete financial history, from multiple banks, to get better loan terms."},
+            {"text": "To combine all the user's money into a single government-managed bank account.", "correct": False, "feedback": "Incorrect. It only manages the flow of data, not the actual funds."},
+            {"text": "To provide investment advice and manage the user's stock portfolio.", "correct": False, "feedback": "Incorrect. An AA is a data-sharing utility, not a financial advisor."}
+        ]
+    },
+    {
+        "title": "Fintech: Web3 Identity",
+        "description": "*Global Mini Highlight: In 2025, a 'login with your wallet' feature is as common as 'login with Google,' especially on e-commerce sites exploring token-gated commerce.*\n\nWhat are two principles of Web3 Identity?",
+        "category": "fintech",
+        "references": "- **Concept:** [Decentralized Identity](https://www.coinbase.com/learn/crypto-basics/what-is-decentralized-identity)",
+        "choices": [
+            {"text": "It is self-sovereign, meaning the user controls their own identity data.", "correct": True, "feedback": "Correct. Instead of relying on a company like Google, your identity is controlled from your personal crypto wallet."},
+            {"text": "It uses the blockchain as a public key infrastructure to verify credentials.", "correct": True, "feedback": "Correct. Ownership of a wallet address can be cryptographically proven, forming the basis of identity verification."},
+            {"text": "It requires you to submit your physical passport to a central database.", "correct": False, "feedback": "Incorrect. The goal is to move away from centralized databases and physical documents."},
+            {"text": "It is controlled and issued by a single tech company.", "correct": False, "feedback": "Incorrect. This describes Web2 identity (e.g., Google, Facebook), which Web3 aims to replace."}
+        ]
+    },
+    {
+        "title": "Fintech: DeFi Insurance",
+        "description": "*Global Mini Highlight: After several high-profile hacks, DeFi insurance protocols like Nexus Mutual covered over $500 million in user losses in 2024.*\n\nWhat are two features of DeFi insurance?",
+        "category": "fintech",
+        "references": "- **Service:** [DeFi Insurance](https://www.investopedia.com/what-is-decentralized-insurance-5217351)",
+        "choices": [
+            {"text": "It typically provides coverage against specific technical risks like smart contract failure.", "correct": True, "feedback": "Correct. This is a primary use case—insuring against bugs in the code of other DeFi protocols."},
+            {"text": "It often operates as a mutual, where members share risk and contribute to a capital pool.", "correct": True, "feedback": "Correct. This peer-to-peer model is common, where the users are also the underwriters of the insurance."},
+            {"text": "It is provided for free to all users of DeFi.", "correct": False, "feedback": "Incorrect. Users must pay a premium to purchase coverage, just like with traditional insurance."},
+            {"text": "It is legally required for all cryptocurrency wallets.", "correct": False, "feedback": "Incorrect. DeFi insurance is an optional product that users can choose to buy."}
+        ]
+    },
+    {
+        "title": "Fintech: ESG Data & AI",
+        "description": "*Global Mini Highlight: By 2025, AI-powered platforms are the primary tool for investors to analyze unstructured ESG data from company reports and news.*\n\nWhat are two ways AI helps with ESG investing?",
+        "category": "fintech",
+        "references": "- **Concept:** [ESG Investing](https.www.investopedia.com/terms/e/environmental-social-and-governance-esg-criteria.asp)",
+        "choices": [
+            {"text": "By using Natural Language Processing (NLP) to scan reports for greenwashing.", "correct": True, "feedback": "Correct. AI can analyze the language companies use to detect inconsistencies between their claims and actions."},
+            {"text": "By aggregating and standardizing ESG data from thousands of different sources.", "correct": True, "feedback": "Correct. AI helps make sense of the vast and often inconsistent ESG data landscape."},
+            {"text": "By guaranteeing that any company with a high ESG score will have a rising stock price.", "correct": False, "feedback": "Incorrect. ESG scores and stock performance are not perfectly correlated; AI is a tool for analysis, not a crystal ball."},
+            {"text": "By investing in companies that have the most social media followers.", "correct": False, "feedback": "Incorrect. This is a poor metric for genuine ESG performance."}
+        ]
+    },
+
+    # --- Finance & Stock Market Questions (20) ---
+    {
+        "title": "Stock Market: Market Capitalization",
+        "description": "*Global Mini Highlight: Several Indian companies joined the $1 trillion market cap club in the 2024-2025 bull run.*\n\nWhich two statements about 'Market Cap' are correct?",
+        "category": "general_finance",
+        "references": "- **Metric:** [Market Capitalization](https://www.investopedia.com/terms/m/marketcapitalization.asp)",
+        "choices": [
+            {"text": "It is calculated by multiplying the share price by the number of outstanding shares.", "correct": True, "feedback": "This is the formula for calculating a company's market cap."},
+            {"text": "It is used to categorize companies into sizes like 'small-cap', 'mid-cap', and 'large-cap'.", "correct": True, "feedback": "These categories are standard in the industry and are based directly on market cap levels."},
+            {"text": "It represents the total amount of cash a company has.", "correct": False, "feedback": "Cash on hand is a different metric found on the balance sheet."},
+            {"text": "A company can never have a market cap higher than its annual revenue.", "correct": False, "feedback": "Many growth companies have market caps that are many multiples of their revenue."}
+        ]
+    },
+    {
+        "title": "Stock Market: Bull and Bear Markets",
+        "description": "*Global Mini Highlight: The global markets experienced a sharp bear market in early 2024, followed by a strong bull market recovery into 2025.*\n\nWhich two definitions are correct?",
+        "category": "general_finance",
+        "references": "- **Concept:** [Bull vs. Bear Market](https://www.investopedia.com/insights/digging-deeper-bull-and-bear-markets/)",
+        "choices": [
+            {"text": "A 'bull market' is a period of generally rising prices and investor optimism.", "correct": True, "feedback": "This correctly defines a bull market."},
+            {"text": "A 'bear market' is often defined as a market decline of 20% or more from recent highs.", "correct": True, "feedback": "This 20% decline is the commonly accepted technical definition of a bear market."},
+            {"text": "A 'bear market' is when trading volumes are at their highest.", "correct": False, "feedback": "Trading volumes can be high in both bull and bear markets, often spiking during periods of panic selling."},
+            {"text": "A 'bull market' refers exclusively to the market for livestock.", "correct": False, "feedback": "While the terms originate from the way the animals attack, in finance they refer to market direction."}
+        ]
+    },
+    {
+        "title": "Stock Market: P/E Ratio",
+        "description": "*Global Mini Highlight: The P/E ratio for the AI sector reached extreme highs in 2024 before correcting in 2025.*\n\nWhat are two valid interpretations of a high Price-to-Earnings (P/E) ratio?",
+        "category": "general_finance",
+        "references": "- **Metric:** [Price-to-Earnings (P/E) Ratio](https://www.investopedia.com/terms/p/price-earningsratio.asp)",
+        "choices": [
+            {"text": "The market has high expectations for the company's future earnings growth.", "correct": True, "feedback": "This is the primary reason investors pay a premium for a stock relative to its current earnings."},
+            {"text": "The stock may be overvalued compared to its peers or its own historical average.", "correct": True, "feedback": "A high P/E ratio can also be a warning sign of an inflated stock price that is not justified by fundamentals."},
+            {"text": "The company has very low or negative earnings.", "correct": False, "feedback": "If earnings are negative, the P/E ratio is typically not applicable (N/A)."},
+            {"text": "The company operates in a slow-growth, stable industry like utilities.", "correct": False, "feedback": "Companies in such industries usually have low and stable P/E ratios."}
+        ]
+    },
+    {
+        "title": "Stock Market: ETF vs. Mutual Fund",
+        "description": "*Global Mini Highlight: By 2025, total assets in ETFs globally have surpassed those in actively managed mutual funds.*\n\nWhich two statements correctly differentiate ETFs from Mutual Funds?",
+        "category": "general_finance",
+        "references": "- **Comparison:** [ETF vs. Mutual Fund](https://www.investopedia.com/articles/investing/032615/how-trade-etfs-vs-mutual-funds.asp)",
+        "choices": [
+            {"text": "ETFs can be bought and sold throughout the trading day at changing prices.", "correct": True, "feedback": "This intraday tradability is a key feature of ETFs, which are listed on stock exchanges."},
+            {"text": "Mutual funds are priced only once per day, at the Net Asset Value (NAV) after markets close.", "correct": True, "feedback": "All buy and sell orders for a mutual fund placed during the day are executed at this single price."},
+            {"text": "ETFs are always actively managed, while mutual funds are always passive.", "correct": False, "feedback": "Both fund types can be either actively managed or passively track an index."},
+            {"text": "You can only buy mutual funds with cryptocurrency.", "correct": False, "feedback": "Both are purchased with traditional fiat currency."}
         ]
     },
     {
@@ -184,6 +305,18 @@ SCENARIOS = [
         ]
     },
     {
+        "title": "Stock Market: Short Selling",
+        "description": "*Global Mini Highlight: The 'meme stock' craze of the early 2020s taught many new traders painful lessons about the risks of short selling.*\n\nWhat are two significant risks of short selling a stock?",
+        "category": "general_finance",
+        "references": "- **Strategy:** [Short Selling](https://www.investopedia.com/terms/s/shortselling.asp)",
+        "choices": [
+            {"text": "The potential for unlimited losses.", "correct": True, "feedback": "Since a stock's price can theoretically rise indefinitely, the potential loss for a short seller is unlimited."},
+            {"text": "The risk of a 'short squeeze,' where a rising price forces sellers to buy back shares.", "correct": True, "feedback": "A short squeeze can cause rapid and massive losses as short sellers are forced to close their positions at high prices."},
+            {"text": "The risk that the company will pay a surprise dividend.", "correct": False, "feedback": "While a short seller has to pay the dividend, this is a known cost, not the primary risk compared to unlimited losses."},
+            {"text": "The risk of the stock being delisted from the exchange.", "correct": False, "feedback": "A delisting would typically cause the stock price to plummet, which would be a profitable event for a short seller."}
+        ]
+    },
+    {
         "title": "Stock Market: Blue-Chip vs. Penny Stock",
         "description": "*Global Mini Highlight: The market volatility of 2024 has led many new investors in 2025 to prefer the stability of blue-chip stocks.*\n\nWhich two descriptions apply to 'blue-chip' stocks?",
         "category": "general_finance",
@@ -193,6 +326,30 @@ SCENARIOS = [
             {"text": "They often pay regular dividends to shareholders.", "correct": True, "feedback": "Their stable cash flows allow many blue-chip companies to pay consistent dividends."},
             {"text": "They are highly speculative and have a high risk of failure.", "correct": False, "feedback": "This describes penny stocks, not blue-chip stocks."},
             {"text": "They trade for very low prices, often less than ₹10 per share.", "correct": False, "feedback": "This is the definition of a penny stock."}
+        ]
+    },
+    {
+        "title": "Stock Market: Market Order vs. Limit Order",
+        "description": "*Global Mini Highlight: High-frequency trading firms in 2025 exploit the tiny differences between market orders and the bid-ask spread to make profits.*\n\nWhich two statements accurately describe order types?",
+        "category": "general_finance",
+        "references": "- **Comparison:** [Order Types](https://www.investopedia.com/ask/answers/100314/whats-difference-between-market-order-and-limit-order.asp)",
+        "choices": [
+            {"text": "A 'market order' prioritizes speed of execution over a specific price.", "correct": True, "feedback": "A market order will execute immediately at the best available current price."},
+            {"text": "A 'limit order' allows you to set a maximum price for a buy or a minimum price for a sell.", "correct": True, "feedback": "A limit order gives you control over the price but does not guarantee execution."},
+            {"text": "A 'market order' guarantees you will get the last-traded price.", "correct": False, "feedback": "It guarantees execution at the *next available* price, which may be different from the last-traded price due to the bid-ask spread."},
+            {"text": "A 'limit order' is guaranteed to execute within 24 hours.", "correct": False, "feedback": "A limit order will only execute if the market price reaches your specified limit, which may never happen."}
+        ]
+    },
+    {
+        "title": "General Finance: Diversification",
+        "description": "*Global Mini Highlight: The synchronized global market downturn of 2024 showed the limits of simple stock diversification, leading investors in 2025 to seek broader asset class diversification.*\n\nWhich two are examples of diversification?",
+        "category": "general_finance",
+        "references": "- **Strategy:** [Diversification](https://www.investopedia.com/terms/d/diversification.asp)",
+        "choices": [
+            {"text": "Owning stocks from different industries (e.g., tech, healthcare, energy).", "correct": True, "feedback": "This is sector diversification, reducing the risk of a downturn in any single industry."},
+            {"text": "Holding a mix of different asset classes (e.g., stocks, bonds, real estate).", "correct": True, "feedback": "This is asset class diversification, the broadest form of risk management."},
+            {"text": "Putting all your money into the single best-performing stock of the last year.", "correct": False, "feedback": "This is concentration, the opposite of diversification."},
+            {"text": "Buying shares of five different technology companies.", "correct": False, "feedback": "While this is a start, it is not broad diversification as you are still concentrated in a single industry."}
         ]
     },
     {
@@ -220,15 +377,51 @@ SCENARIOS = [
         ]
     },
     {
+        "title": "General Finance: Inflation",
+        "description": "*Global Mini Highlight: After peaking in the early 2020s, inflation has remained stubbornly above central bank targets into 2025.*\n\nWhich two asset classes have historically performed well during high inflation?",
+        "category": "general_finance",
+        "references": "- **Concept:** [Inflation](https://www.investopedia.com/terms/i/inflation.asp)",
+        "choices": [
+            {"text": "Commodities, such as oil and metals.", "correct": True, "feedback": "The price of raw materials often rises with inflation, making them a good hedge."},
+            {"text": "Real estate, as property values and rents tend to rise with prices.", "correct": True, "feedback": "Real estate is a physical asset that can provide protection against the declining value of currency."},
+            {"text": "Long-term government bonds.", "correct": False, "feedback": "Inflation is very bad for long-term bonds, as it erodes the value of their fixed interest payments."},
+            {"text": "Cash held in a savings account.", "correct": False, "feedback": "Inflation directly reduces the purchasing power of cash, making it a poor performer."}
+        ]
+    },
+    {
         "title": "General Finance: Stocks vs. Bonds",
-        "description": "*Global Mini Highlight: With interest rates high in 2025, bonds have become a more competitive alternative to stocks for the first time in over a decade.*\n\nWhat is the fundamental difference between owning a stock vs. a bond?",
+        "description": "*Global Mini Highlight: With interest rates high in 2025, bonds have become a more competitive alternative to stocks for the first time in over a decade.*\n\nIn the event of a company's bankruptcy, which two statements are true?",
         "category": "general_finance",
         "references": "- **Comparison:** [Stocks vs. Bonds](https://www.investopedia.com/articles/investing/050213/stocks-vs-bonds-which-should-you-buy.asp)",
         "choices": [
-            {"text": "Stock represents ownership (equity), while a bond represents a loan (debt).", "correct": True, "feedback": "Correct. As a stockholder, you are a part-owner of the company. As a bondholder, you are a lender to the company."},
-            {"text": "In a bankruptcy, bondholders have a higher claim on assets than stockholders.", "correct": True, "feedback": "Correct. Lenders (bondholders) must be paid back before owners (stockholders) receive anything."},
-            {"text": "Stocks are considered less risky than bonds.", "correct": False, "feedback": "Incorrect. Stocks are generally considered riskier than bonds because their value can fluctuate more."},
-            {"text": "Only bonds pay dividends.", "correct": False, "feedback": "Incorrect. Stocks can pay dividends; bonds pay interest (coupon payments)."}
+            {"text": "Bondholders are paid before stockholders.", "correct": True, "feedback": "As lenders, bondholders have a higher claim on the company's assets than owners (stockholders)."},
+            {"text": "Stockholders are likely to lose their entire investment.", "correct": True, "feedback": "As residual claimants, stockholders are last in line and often receive nothing after the company's debts are paid."},
+            {"text": "Stockholders and bondholders are paid out equally.", "correct": False, "feedback": "There is a strict hierarchy of repayment, and stockholders are at the bottom."},
+            {"text": "The government is required to bail out all stockholders.", "correct": False, "feedback": "There is no government guarantee for stock investments."}
+        ]
+    },
+    {
+        "title": "General Finance: Net Worth",
+        "description": "*Global Mini Highlight: A 2025 study shows that the median net worth for millennials has finally surpassed that of previous generations at the same age.*\n\nWhich two items are considered liabilities when calculating net worth?",
+        "category": "general_finance",
+        "references": "- **Metric:** [Net Worth](https://www.investopedia.com/terms/n/networth.asp)",
+        "choices": [
+            {"text": "The outstanding balance on your mortgage.", "correct": True, "feedback": "A mortgage is a debt, which is a liability."},
+            {"text": "The amount you owe on your student loans.", "correct": True, "feedback": "Student loans are a form of debt and therefore a liability."},
+            {"text": "The value of your car.", "correct": False, "feedback": "The car itself is an asset. The car loan would be the liability."},
+            {"text": "The amount of money in your retirement account.", "correct": False, "feedback": "Your retirement account is a key asset."}
+        ]
+    },
+    {
+        "title": "General Finance: Emergency Fund",
+        "description": "*Global Mini Highlight: The economic uncertainty of the early 2020s led to a permanent shift by 2025, with more households maintaining a larger emergency fund.*\n\nWhich two are key characteristics of a proper emergency fund?",
+        "category": "general_finance",
+        "references": "- **Concept:** [Emergency Fund](https://www.investopedia.com/terms/e/emergency_fund.asp)",
+        "choices": [
+            {"text": "It should be liquid, meaning easily accessible as cash.", "correct": True, "feedback": "The money needs to be available immediately, so a high-yield savings account is a common choice."},
+            {"text": "It should typically cover 3-6 months of essential living expenses.", "correct": True, "feedback": "This is the standard financial planning advice to provide a cushion in case of job loss or other emergencies."},
+            {"text": "It should be invested in high-growth technology stocks.", "correct": False, "feedback": "This would expose your emergency savings to market risk, defeating its purpose as a safety net."},
+            {"text": "It should be used for planned expenses like vacations.", "correct": False, "feedback": "An emergency fund is strictly for unplanned, urgent financial needs."}
         ]
     },
     {
@@ -244,6 +437,18 @@ SCENARIOS = [
         ]
     },
     {
+        "title": "Stock Market: Fundamental vs. Technical Analysis",
+        "description": "*Global Mini Highlight: The rise of AI trading in 2025 has led to new forms of hybrid analysis, combining technical and fundamental signals.*\n\nWhich two statements correctly describe these methods?",
+        "category": "general_finance",
+        "references": "- **Comparison:** [Fundamental vs. Technical Analysis](https://www.investopedia.com/articles/investing/052813/fundamental-vs-technical-analysis.asp)",
+        "choices": [
+            {"text": "Fundamental analysis involves examining a company's financial health and statements.", "correct": True, "feedback": "It focuses on metrics like revenue, earnings, and debt to determine a company's intrinsic value."},
+            {"text": "Technical analysis involves studying price charts and trading volumes to identify patterns.", "correct": True, "feedback": "It focuses on market psychology and past price movements to predict future trends."},
+            {"text": "Fundamental analysis is only useful for short-term day trading.", "correct": False, "feedback": "It is primarily used for long-term investing."},
+            {"text": "Technical analysis determines the exact price a stock 'should' be worth.", "correct": False, "feedback": "It attempts to predict price direction, not calculate intrinsic value."}
+        ]
+    },
+    {
         "title": "Stock Market: Economic Moat",
         "description": "*Global Mini Highlight: Warren Buffett's 2025 shareholder letter reiterated his focus on investing in companies with durable 'economic moats'.*\n\nWhat are two examples of a company's economic moat?",
         "category": "general_finance",
@@ -255,8 +460,43 @@ SCENARIOS = [
             {"text": "Having a very high stock price.", "correct": False, "feedback": "A high stock price is the result of market perception, not an underlying competitive advantage."}
         ]
     },
-
-    # --- General Knowledge (GK) Questions (5) ---
+    {
+        "title": "Stock Market: Hedging",
+        "description": "*Global Mini Highlight: Due to increased market volatility in 2025, the use of hedging instruments by retail investors has seen a significant rise.*\n\nWhat are two common ways an investor might 'hedge' a stock portfolio?",
+        "category": "general_finance",
+        "references": "- **Strategy:** [Hedging](https://www.investopedia.com/terms/h/hedge.asp)",
+        "choices": [
+            {"text": "Buying put options on a market index like the S&P 500.", "correct": True, "feedback": "If the market falls, the value of the put options will rise, offsetting some of the losses in the stock portfolio."},
+            {"text": "Short-selling an index ETF that tracks the overall market.", "correct": True, "feedback": "This creates a position that profits from a market decline, counteracting losses in their long stock positions."},
+            {"text": "Selling all their stocks and holding only cash.", "correct": False, "feedback": "This is exiting the market, not hedging. Hedging is about reducing risk while maintaining a position."},
+            {"text": "Doubling down and buying more of the stocks they already own.", "correct": False, "feedback": "This increases risk and concentration, which is the opposite of hedging."}
+        ]
+    },
+    {
+        "title": "Stock Market: Calls vs. Puts",
+        "description": "*Global Mini Highlight: Options trading volume hit an all-time high in 2025 as investors used them for both speculation and hedging.*\n\nWhich two statements about options trading are correct?",
+        "category": "general_finance",
+        "references": "- **Comparison:** [Call vs. Put](https://www.investopedia.com/ask/answers/04/033104.asp)",
+        "choices": [
+            {"text": "Buying a 'call option' gives you the right, but not the obligation, to buy a stock at a set price.", "correct": True, "feedback": "This is the definition of a call option. It's a bullish bet that the stock price will rise."},
+            {"text": "Buying a 'put option' gives you the right, but not the obligation, to sell a stock at a set price.", "correct": True, "feedback": "This is the definition of a put option. It's a bearish bet that the stock price will fall."},
+            {"text": "A 'call option' is a bet that the stock price will go down.", "correct": False, "feedback": "This is incorrect; a call option is a bet on the price going up."},
+            {"text": "You are legally required to exercise any option you buy.", "correct": False, "feedback": "Options give you the 'right, not the obligation.' Many options expire worthless if they are not profitable to exercise."}
+        ]
+    },
+    {
+        "title": "General Finance: Alternative Investments",
+        "description": "*Global Mini Highlight: With public market returns becoming more correlated in 2025, institutional investors are increasing their allocation to alternative investments.*\n\nWhich two are examples of 'alternative investments'?",
+        "category": "general_finance",
+        "references": "- **Asset Class:** [Alternative Investment](https://www.investopedia.com/terms/a/alternative_investment.asp)",
+        "choices": [
+            {"text": "Private Equity, which involves investing in privately-held companies.", "correct": True, "feedback": "Correct. This is a classic alternative investment, not accessible on public stock exchanges."},
+            {"text": "Venture Capital, which focuses on funding early-stage startup companies.", "correct": True, "feedback": "Correct. This is a high-risk, high-return subset of private equity."},
+            {"text": "A publicly-traded blue-chip stock like Reliance Industries.", "correct": False, "feedback": "Incorrect. This is a traditional investment, not an alternative one."},
+            {"text": "A government savings bond.", "correct": False, "feedback": "Incorrect. Government bonds are a core traditional asset class."}
+        ]
+    },
+    # --- General Knowledge (GK) Questions (10) ---
     {
         "title": "GK: Global Supply Chains",
         "description": "*Global Mini Highlight: After the supply chain disruptions of the early 2020s, many multinational corporations have shifted to a 'China Plus One' strategy.*\n\nWhat are two primary goals of this strategy?",
@@ -316,287 +556,65 @@ SCENARIOS = [
             {"text": "An increase in daily commuting traffic into city centers.", "correct": False, "feedback": "Incorrect. Remote work significantly reduces the number of daily commuters."},
             {"text": "A mandatory requirement for all employees to live within 5 km of their office.", "correct": False, "feedback": "Incorrect. Remote work allows employees to live much farther away from their company's physical office."}
         ]
-    }
-] merchants.", "correct": True, "feedback": "This is a primary revenue stream, as merchants pay a fee to offer the service and increase sales."},
-            {"text": "They earn revenue from interest or late fees from consumers.", "correct": True, "feedback": "This is the other major revenue stream, collected from consumers who do not pay on time."},
-            {"text": "They require all users to pay a monthly subscription.", "correct": False, "feedback": "Most BNPL services do not require subscriptions for basic use."},
-            {"text": "They operate as fully-licensed traditional banks.", "correct": False, "feedback": "BNPL services are financial technology companies, not traditional banks."}
+    },
+    {
+        "title": "GK: Carbon Credit Markets",
+        "description": "*Global Mini Highlight: The price of carbon credits on the EU's Emissions Trading System (ETS) has become a key indicator for industrial companies in 2025.*\n\nWhat are two functions of a carbon credit?",
+        "category": "gk",
+        "references": "- **Concept:** [Carbon Credit](https://www.investopedia.com/terms/c/carbon_credit.asp)",
+        "choices": [
+            {"text": "It represents a permit allowing a company to emit one ton of carbon dioxide.", "correct": True, "feedback": "Correct. It's a tradable permit scheme to cap total emissions."},
+            {"text": "It creates a financial incentive for companies to reduce their emissions.", "correct": True, "feedback": "Correct. If a company emits less, it can sell its unused credits for a profit."},
+            {"text": "It is a consumer product that individuals can burn for heat.", "correct": False, "feedback": "Incorrect. It is a financial instrument, not a physical fuel."},
+            {"text": "It provides a tax deduction for driving a gasoline-powered car.", "correct": False, "feedback": "Incorrect. It is a market mechanism for corporations, not a personal tax deduction."}
         ]
     },
     {
-        "title": "Fintech: Robo-Advisors",
-        "description": "What are two key advantages of using a 'Robo-Advisor' for investing?",
-        "category": "fintech",
-        "references": "- **Tool:** [Robo-Advisor](https://www.investopedia.com/terms/r/roboadvisor.asp)",
+        "title": "GK: Economics of Space Exploration",
+        "description": "*Global Mini Highlight: By 2025, private companies like SpaceX and Blue Origin have made access to low Earth orbit significantly cheaper.*\n\nWhat are two major economic opportunities created by this?",
+        "category": "gk",
+        "references": "- **Industry:** [Space Economy](https://www.morganstanley.com/ideas/investing-in-space)",
         "choices": [
-            {"text": "Lower management fees compared to traditional human advisors.", "correct": True, "feedback": "Automation allows robo-advisors to operate with much lower overhead, resulting in lower fees."},
-            {"text": "High accessibility with low minimum investment requirements.", "correct": True, "feedback": "They are designed to be accessible to a wide range of investors, often with very low or no minimums."},
-            {"text": "They guarantee that your portfolio will never lose money.", "correct": False, "feedback": "No investment service can guarantee against losses, as all investments carry market risk."},
-            {"text": "They provide complex, custom tax advice for high-net-worth clients.", "correct": False, "feedback": "While they may offer tax-loss harvesting, complex tax advice is typically outside their scope."}
+            {"text": "The deployment of large satellite constellations for global internet access.", "correct": True, "feedback": "Correct. Lower launch costs make projects like Starlink economically viable."},
+            {"text": "New possibilities for in-space manufacturing and asteroid mining.", "correct": True, "feedback": "Correct. While still early, cheaper access is the first step toward making these futuristic industries possible."},
+            {"text": "A decrease in the value of all technology stocks on Earth.", "correct": False, "feedback": "Incorrect. The space economy is an extension of the tech sector and is seen as a major growth area."},
+            {"text": "A global agreement to stop all future space launches.", "correct": False, "feedback": "Incorrect. The trend is toward a rapid increase in space activity, not a decrease."}
         ]
     },
     {
-        "title": "Fintech: Blockchain Technology",
-        "description": "What are two fundamental features of blockchain technology?",
-        "category": "fintech",
-        "references": "- **Technology:** [Blockchain Explained](https://www.investopedia.com/terms/b/blockchain.asp)",
+        "title": "GK: AI's Impact on Labor Markets",
+        "description": "*Global Mini Highlight: A 2025 study showed that AI has automated 15% of routine analytical jobs but created new roles in AI management and data science.*\n\nWhat are two recognized impacts of AI on the labor market?",
+        "category": "gk",
+        "references": "- **Trend:** [AI and the Future of Jobs](https://www.weforum.org/reports/the-future-of-jobs-report-2023/)",
         "choices": [
-            {"text": "It is a distributed ledger, meaning the record is shared across many computers.", "correct": True, "feedback": "This decentralization is key to its security and transparency."},
-            {"text": "The records (blocks) are immutable, meaning they cannot be altered once added.", "correct": True, "feedback": "Immutability ensures the integrity of the transaction history."},
-            {"text": "It is controlled by a single central authority, like a central bank.", "correct": False, "feedback": "Blockchain is designed to be decentralized, the opposite of having a central authority."},
-            {"text": "It guarantees complete anonymity for all users.", "correct": False, "feedback": "While it can be pseudonymous, transactions on public blockchains are typically traceable."}
+            {"text": "It can automate repetitive tasks, increasing productivity in some roles.", "correct": True, "feedback": "Correct. AI is excellent at handling routine data processing and analysis, freeing up humans for more complex tasks."},
+            {"text": "It creates new job categories that did not exist before, like 'prompt engineer' or 'AI ethicist'.", "correct": True, "feedback": "Correct. As with past technological shifts, AI eliminates some jobs while creating entirely new ones."},
+            {"text": "It has resulted in a permanent increase in the global unemployment rate.", "correct": False, "feedback": "Incorrect. Historically, technology has displaced jobs but has not led to a permanent rise in overall unemployment due to the creation of new roles."},
+            {"text": "It has made all forms of human labor completely obsolete.", "correct": False, "feedback": "Incorrect. AI is a tool that complements human labor; tasks requiring creativity, empathy, and complex problem-solving remain in high demand."}
         ]
     },
     {
-        "title": "Fintech: Peer-to-Peer (P2P) Lending",
-        "description": "Which two statements accurately describe Peer-to-Peer (P2P) lending?",
-        "category": "fintech",
-        "references": "- **Concept:** [Peer-to-Peer (P2P) Lending](https://www.investopedia.com/terms/p/peer-to-peer-lending.asp)",
+        "title": "GK: Water Scarcity as an Economic Risk",
+        "description": "*Global Mini Highlight: In 2025, cities like Cape Town and Chennai are implementing permanent water rationing, impacting local industries.*\n\nWhat are two economic consequences of severe water scarcity?",
+        "category": "gk",
+        "references": "- **Risk:** [Water Scarcity](https://www.worldbank.org/en/topic/water/overview)",
         "choices": [
-            {"text": "It connects individual borrowers directly with individual investors (lenders).", "correct": True, "feedback": "This is the core function, bypassing traditional financial intermediaries like banks."},
-            {"text": "Investors face the risk of borrower default.", "correct": True, "feedback": "Because there is no bank underwriting the risk, the individual investor bears the loss if a borrower defaults."},
-            {"text": "All P2P loans are guaranteed by the government.", "correct": False, "feedback": "P2P loans are private investments and are not typically insured or guaranteed by the government."},
-            {"text": "It is only used for obtaining large corporate business loans.", "correct": False, "feedback": "P2P lending is most commonly used for personal loans, not large corporate financing."}
+            {"text": "Disruption to agriculture, leading to lower crop yields and higher food prices.", "correct": True, "feedback": "Correct. Agriculture is the largest consumer of fresh water, and scarcity directly impacts food production."},
+            {"text": "Increased operational costs and risks for industries like manufacturing and energy production.", "correct": True, "feedback": "Correct. Many industrial processes, from making semiconductors to cooling power plants, require vast amounts of water."},
+            {"text": "A global decrease in the price of bottled water.", "correct": False, "feedback": "Incorrect. Scarcity of a resource typically leads to an increase in the price of its substitutes."},
+            {"text": "An increase in the population of all major deserts.", "correct": False, "feedback": "Incorrect. This describes desertification, which is a cause of water scarcity, not an economic consequence of it."}
         ]
     },
     {
-        "title": "Fintech: Neobanks",
-        "description": "What are two common characteristics of 'Neobanks'?",
-        "category": "fintech",
-        "references": "- **Business Model:** [Neobank](https://www.investopedia.com/terms/n/neobank.asp)",
+        "title": "GK: Rare Earth Metals",
+        "description": "*Global Mini Highlight: Geopolitical tensions in 2025 have led to fears of a supply disruption for rare earth metals, critical for the tech and defense industries.*\n\nWhich two are true statements about rare earth metals?",
+        "category": "gk",
+        "references": "- **Resource:** [Rare Earth Metals](https://www.investopedia.com/terms/r/rare-earth-element.asp)",
         "choices": [
-            {"text": "They operate without physical bank branches.", "correct": True, "feedback": "Their digital-only model reduces overhead and costs."},
-            {"text": "They typically offer lower fees than traditional banks.", "correct": True, "feedback": "Their lower cost structure allows them to pass savings onto customers with fewer fees."},
-            {"text": "They have been in operation for over a century.", "correct": False, "feedback": "Neobanks are a very recent phenomenon, emerging with the rise of smartphones and the internet."},
-            {"text": "They focus primarily on providing services to large corporations.", "correct": False, "feedback": "Neobanks are typically focused on retail consumers and small to medium-sized businesses."}
-        ]
-    },
-    {
-        "title": "Fintech: Open Banking",
-        "description": "What are two key outcomes of 'Open Banking'?",
-        "category": "fintech",
-        "references": "- **Concept:** [Open Banking](https://www.investopedia.com/terms/o/open-banking.asp)",
-        "choices": [
-            {"text": "It allows third-party financial apps to access a user's bank data with their consent.", "correct": True, "feedback": "This is the primary mechanism, using secure APIs to share data."},
-            {"text": "It fosters greater competition and innovation in financial services.", "correct": True, "feedback": "By allowing new fintech companies to build services on top of bank data, it creates more choices for consumers."},
-            {"text": "It merges all of a user's bank accounts into a single government-controlled account.", "correct": False, "feedback": "Open Banking is about data sharing between private entities with user consent, not consolidation under government control."},
-            {"text": "It eliminates the need for passwords by using only biometric authentication.", "correct": False, "feedback": "While biometrics are part of modern security, Open Banking's core function is data sharing via APIs, not changing authentication rules."}
-        ]
-    },
-    {
-        "title": "Fintech: Insurtech",
-        "description": "Which two are common applications of 'Insurtech'?",
-        "category": "fintech",
-        "references": "- **Industry:** [Insurtech](https://www.investopedia.com/terms/i/insurtech.asp)",
-        "choices": [
-            {"text": "Using telematics data from a car to determine auto insurance premiums.", "correct": True, "feedback": "This is a prime example of using real-time data to price risk more accurately."},
-            {"text": "Using health data from wearables to offer personalized life insurance rates.", "correct": True, "feedback": "This allows insurers to reward healthy lifestyles with lower premiums."},
-            {"text": "Replacing all human insurance agents with robots.", "correct": False, "feedback": "While Insurtech automates many processes, human agents still play a key role, especially for complex products."},
-            {"text": "Creating a single insurance policy that covers every possible risk in the world.", "correct": False, "feedback": "Insurtech focuses on personalizing and specializing insurance, not creating a universal, one-size-fits-all policy."}
-        ]
-    },
-    {
-        "title": "Fintech: Crowdfunding",
-        "description": "What are two distinct types of crowdfunding?",
-        "category": "fintech",
-        "references": "- **Concept:** [Crowdfunding](https://www.investopedia.com/terms/c/crowdfunding.asp)",
-        "choices": [
-            {"text": "Reward-based crowdfunding, where backers get a product or perk.", "correct": True, "feedback": "This is common on platforms like Kickstarter, where you get the product you helped fund."},
-            {"text": "Equity crowdfunding, where backers receive a stake or ownership in the company.", "correct": True, "feedback": "This is common on platforms like SeedInvest, where backers become investors in the business."},
-            {"text": "Tax-based crowdfunding, where backers pay a company's taxes.", "correct": False, "feedback": "This is not a recognized model of crowdfunding."},
-            {"text": "Political crowdfunding, where the funds are used exclusively to lobby governments.", "correct": False, "feedback": "While political fundraising exists, it's distinct from the business and project-based models of crowdfunding."}
-        ]
-    },
-    {
-        "title": "Fintech: Staking in Crypto",
-        "description": "In a Proof-of-Stake (PoS) system, what are two purposes of 'staking' cryptocurrency?",
-        "category": "fintech",
-        "references": "- **Concept:** [Proof-of-Stake (PoS)](https://www.investopedia.com/terms/p/proof-stake-pos.asp)",
-        "choices": [
-            {"text": "To participate in validating transactions and securing the network.", "correct": True, "feedback": "This is the core function; stakers act as validators for the blockchain."},
-            {"text": "To earn rewards or yield, similar to earning interest.", "correct": True, "feedback": "Validators are compensated for their work with additional tokens, providing a return on the staked assets."},
-            {"text": "To hide transactions from the public ledger.", "correct": False, "feedback": "Staking is part of the public validation process; it doesn't hide transactions."},
-            {"text": "To convert cryptocurrency into physical cash.", "correct": False, "feedback": "Staking is an on-chain activity and is unrelated to cashing out."}
-        ]
-    },
-    {
-        "title": "Stock Market: Market Capitalization",
-        "description": "Which two statements about 'Market Capitalization' are correct?",
-        "category": "general_finance",
-        "references": "- **Metric:** [Market Capitalization](https://www.investopedia.com/terms/m/marketcapitalization.asp)",
-        "choices": [
-            {"text": "It is calculated by multiplying the share price by the number of outstanding shares.", "correct": True, "feedback": "This is the formula for calculating a company's market cap."},
-            {"text": "It is used to categorize companies into sizes like 'small-cap', 'mid-cap', and 'large-cap'.", "correct": True, "feedback": "These categories are standard in the industry and are based directly on market cap levels."},
-            {"text": "It represents the total amount of cash a company has.", "correct": False, "feedback": "Cash on hand is a different metric found on the balance sheet."},
-            {"text": "A company can never have a market cap higher than its annual revenue.", "correct": False, "feedback": "Many growth companies have market caps that are many multiples of their revenue."}
-        ]
-    },
-    {
-        "title": "Stock Market: Bull and Bear Markets",
-        "description": "Which two definitions are correct?",
-        "category": "general_finance",
-        "references": "- **Concept:** [Bull vs. Bear Market](https://www.investopedia.com/insights/digging-deeper-bull-and-bear-markets/)",
-        "choices": [
-            {"text": "A 'bull market' is a period of generally rising prices and investor optimism.", "correct": True, "feedback": "This correctly defines a bull market."},
-            {"text": "A 'bear market' is often defined as a market decline of 20% or more from recent highs.", "correct": True, "feedback": "This 20% decline is the commonly accepted technical definition of a bear market."},
-            {"text": "A 'bear market' is when trading volumes are at their highest.", "correct": False, "feedback": "Trading volumes can be high in both bull and bear markets, often spiking during periods of panic selling."},
-            {"text": "A 'bull market' refers exclusively to the market for livestock.", "correct": False, "feedback": "While the terms originate from the way the animals attack, in finance they refer to market direction."}
-        ]
-    },
-    {
-        "title": "Stock Market: P/E Ratio",
-        "description": "What are two valid interpretations of a high Price-to-Earnings (P/E) ratio?",
-        "category": "general_finance",
-        "references": "- **Metric:** [Price-to-Earnings (P/E) Ratio](https://www.investopedia.com/terms/p/price-earningsratio.asp)",
-        "choices": [
-            {"text": "The market has high expectations for the company's future earnings growth.", "correct": True, "feedback": "This is the primary reason investors pay a premium for a stock relative to its current earnings."},
-            {"text": "The stock may be overvalued compared to its peers or its own historical average.", "correct": True, "feedback": "A high P/E ratio can also be a warning sign of an inflated stock price that is not justified by fundamentals."},
-            {"text": "The company has very low or negative earnings.", "correct": False, "feedback": "If earnings are negative, the P/E ratio is typically not applicable (N/A)."},
-            {"text": "The company operates in a slow-growth, stable industry like utilities.", "correct": False, "feedback": "Companies in such industries usually have low and stable P/E ratios."}
-        ]
-    },
-    {
-        "title": "Stock Market: ETF vs. Mutual Fund",
-        "description": "Which two statements correctly differentiate ETFs from Mutual Funds?",
-        "category": "general_finance",
-        "references": "- **Comparison:** [ETF vs. Mutual Fund](https://www.investopedia.com/articles/investing/032615/how-trade-etfs-vs-mutual-funds.asp)",
-        "choices": [
-            {"text": "ETFs can be bought and sold throughout the trading day at changing prices.", "correct": True, "feedback": "This intraday tradability is a key feature of ETFs, which are listed on stock exchanges."},
-            {"text": "Mutual funds are priced only once per day, at the Net Asset Value (NAV) after markets close.", "correct": True, "feedback": "All buy and sell orders for a mutual fund placed during the day are executed at this single price."},
-            {"text": "ETFs are always actively managed, while mutual funds are always passive.", "correct": False, "feedback": "Both fund types can be either actively managed or passively track an index."},
-            {"text": "You can only buy mutual funds with cryptocurrency.", "correct": False, "feedback": "Both are purchased with traditional fiat currency."}
-        ]
-    },
-    {
-        "title": "Stock Market: Dividends",
-        "description": "Which two are true statements about stock dividends?",
-        "category": "general_finance",
-        "references": "- **Concept:** [Dividend](https://www.investopedia.com/terms/d/dividend.asp)",
-        "choices": [
-            {"text": "They are a way for a company to distribute its profits to shareholders.", "correct": True, "feedback": "This is the definition of a dividend—a reward to the owners of the company."},
-            {"text": "Companies are not legally obligated to pay dividends.", "correct": True, "feedback": "A company's board of directors decides whether to pay a dividend; it is not a requirement."},
-            {"text": "The dividend payment causes the company's stock price to increase.", "correct": False, "feedback": "On the ex-dividend date, the stock price typically drops by the amount of the dividend, as that cash is no longer part of the company's value."},
-            {"text": "Only technology companies are allowed to pay dividends.", "correct": False, "feedback": "Companies in any industry can pay dividends, and they are most common among mature, stable companies."}
-        ]
-    },
-    {
-        "title": "Stock Market: Short Selling",
-        "description": "What are two significant risks associated with 'short selling' a stock?",
-        "category": "general_finance",
-        "references": "- **Strategy:** [Short Selling](https://www.investopedia.com/terms/s/shortselling.asp)",
-        "choices": [
-            {"text": "The potential for unlimited losses.", "correct": True, "feedback": "Since a stock's price can theoretically rise indefinitely, the potential loss for a short seller is unlimited."},
-            {"text": "The risk of a 'short squeeze,' where a rising price forces sellers to buy back shares.", "correct": True, "feedback": "A short squeeze can cause rapid and massive losses as short sellers are forced to close their positions at high prices."},
-            {"text": "The risk that the company will pay a surprise dividend.", "correct": False, "feedback": "While a short seller has to pay the dividend, this is a known cost, not the primary risk compared to unlimited losses."},
-            {"text": "The risk of the stock being delisted from the exchange.", "correct": False, "feedback": "A delisting would typically cause the stock price to plummet, which would be a profitable event for a short seller."}
-        ]
-    },
-    {
-        "title": "Stock Market: Blue-Chip vs. Penny Stock",
-        "description": "Which two descriptions apply to 'blue-chip' stocks but NOT to 'penny stocks'?",
-        "category": "general_finance",
-        "references": "- **Concept:** [Blue-Chip Stock](https://www.investopedia.com/terms/b/bluechipstock.asp)",
-        "choices": [
-            {"text": "They are large, financially sound companies with a history of reliability.", "correct": True, "feedback": "This is the definition of a blue-chip stock."},
-            {"text": "They often pay regular dividends to shareholders.", "correct": True, "feedback": "Their stable cash flows allow many blue-chip companies to pay consistent dividends."},
-            {"text": "They are highly speculative and have a high risk of failure.", "correct": False, "feedback": "This describes penny stocks, not blue-chip stocks."},
-            {"text": "They trade for very low prices, often less than $5 per share.", "correct": False, "feedback": "This is the definition of a penny stock."}
-        ]
-    },
-    {
-        "title": "Stock Market: Market Order vs. Limit Order",
-        "description": "Which two statements accurately describe order types?",
-        "category": "general_finance",
-        "references": "- **Comparison:** [Order Types](https://www.investopedia.com/ask/answers/100314/whats-difference-between-market-order-and-limit-order.asp)",
-        "choices": [
-            {"text": "A 'market order' prioritizes speed of execution over a specific price.", "correct": True, "feedback": "A market order will execute immediately at the best available current price."},
-            {"text": "A 'limit order' allows you to set a maximum price for a buy or a minimum price for a sell.", "correct": True, "feedback": "A limit order gives you control over the price but does not guarantee execution."},
-            {"text": "A 'market order' guarantees you will get the last-traded price.", "correct": False, "feedback": "It guarantees execution at the *next available* price, which may be different from the last-traded price due to the bid-ask spread."},
-            {"text": "A 'limit order' is guaranteed to execute within 24 hours.", "correct": False, "feedback": "A limit order will only execute if the market price reaches your specified limit, which may never happen."}
-        ]
-    },
-    {
-        "title": "General Finance: Diversification",
-        "description": "Which two of the following are examples of diversification?",
-        "category": "general_finance",
-        "references": "- **Strategy:** [Diversification](https://www.investopedia.com/terms/d/diversification.asp)",
-        "choices": [
-            {"text": "Owning stocks from different industries (e.g., tech, healthcare, energy).", "correct": True, "feedback": "This is sector diversification, reducing the risk of a downturn in any single industry."},
-            {"text": "Holding a mix of different asset classes (e.g., stocks, bonds, real estate).", "correct": True, "feedback": "This is asset class diversification, the broadest form of risk management."},
-            {"text": "Putting all your money into the single best-performing stock of the last year.", "correct": False, "feedback": "This is concentration, the opposite of diversification."},
-            {"text": "Buying shares of five different technology companies.", "correct": False, "feedback": "While this is a start, it is not broad diversification as you are still concentrated in a single industry."}
-        ]
-    },
-    {
-        "title": "General Finance: Compound Interest",
-        "description": "What two factors have the greatest impact on the power of compound interest?",
-        "category": "general_finance",
-        "references": "- **Concept:** [Compound Interest](https://www.investopedia.com/terms/c/compoundinterest.asp)",
-        "choices": [
-            {"text": "The amount of time the money is invested.", "correct": True, "feedback": "Time is the most critical ingredient, as it allows the 'interest on interest' effect to accelerate."},
-            {"text": "The rate of return (interest rate).", "correct": True, "feedback": "A higher rate of return means your investment compounds more quickly."},
-            {"text": "The name of the bank where the money is held.", "correct": False, "feedback": "The name of the institution is irrelevant to the mathematical principle of compounding."},
-            {"text": "The day of the week you make your initial investment.", "correct": False, "feedback": "The starting day has a negligible effect over the long term."}
-        ]
-    },
-    {
-        "title": "General Finance: Credit Score",
-        "description": "Which two actions are most likely to improve your credit score?",
-        "category": "general_finance",
-        "references": "- **Metric:** [Credit Score](https://www.investopedia.com/terms/c/credit_score.asp)",
-        "choices": [
-            {"text": "Making all of your payments on time.", "correct": True, "feedback": "Payment history is the single most important factor in a credit score."},
-            {"text": "Keeping your credit card balances low relative to their limits.", "correct": True, "feedback": "This is known as your credit utilization ratio, and keeping it low is very important."},
-            {"text": "Closing all of your old credit card accounts.", "correct": False, "feedback": "This can actually hurt your score by reducing your average age of accounts and increasing your utilization ratio."},
-            {"text": "Checking your credit score every single day.", "correct": False, "feedback": "Checking your own score (a 'soft inquiry') does not affect it, but it also doesn't improve it."}
-        ]
-    },
-    {
-        "title": "General Finance: Inflation",
-        "description": "Which two asset classes have historically performed well during periods of high inflation?",
-        "category": "general_finance",
-        "references": "- **Concept:** [Inflation](https://www.investopedia.com/terms/i/inflation.asp)",
-        "choices": [
-            {"text": "Commodities, such as oil and metals.", "correct": True, "feedback": "The price of raw materials often rises with inflation, making them a good hedge."},
-            {"text": "Real estate, as property values and rents tend to rise with prices.", "correct": True, "feedback": "Real estate is a physical asset that can provide protection against the declining value of currency."},
-            {"text": "Long-term government bonds.", "correct": False, "feedback": "Inflation is very bad for long-term bonds, as it erodes the value of their fixed interest payments."},
-            {"text": "Cash held in a savings account.", "correct": False, "feedback": "Inflation directly reduces the purchasing power of cash, making it a poor performer."}
-        ]
-    },
-    {
-        "title": "General Finance: Stocks vs. Bonds",
-        "description": "In the event of a company's bankruptcy, which two statements are true?",
-        "category": "general_finance",
-        "references": "- **Comparison:** [Stocks vs. Bonds](https://www.investopedia.com/articles/investing/050213/stocks-vs-bonds-which-should-you-buy.asp)",
-        "choices": [
-            {"text": "Bondholders are paid before stockholders.", "correct": True, "feedback": "As lenders, bondholders have a higher claim on the company's assets than owners (stockholders)."},
-            {"text": "Stockholders are likely to lose their entire investment.", "correct": True, "feedback": "As residual claimants, stockholders are last in line and often receive nothing after the company's debts are paid."},
-            {"text": "Stockholders and bondholders are paid out equally.", "correct": False, "feedback": "There is a strict hierarchy of repayment, and stockholders are at the bottom."},
-            {"text": "The government is required to bail out all stockholders.", "correct": False, "feedback": "There is no government guarantee for stock investments."}
-        ]
-    },
-    {
-        "title": "General Finance: Net Worth",
-        "description": "Which two items are considered liabilities when calculating your net worth?",
-        "category": "general_finance",
-        "references": "- **Metric:** [Net Worth](https://www.investopedia.com/terms/n/networth.asp)",
-        "choices": [
-            {"text": "The outstanding balance on your mortgage.", "correct": True, "feedback": "A mortgage is a debt, which is a liability."},
-            {"text": "The amount you owe on your student loans.", "correct": True, "feedback": "Student loans are a form of debt and therefore a liability."},
-            {"text": "The value of your car.", "correct": False, "feedback": "The car itself is an asset. The car loan would be the liability."},
-            {"text": "The amount of money in your retirement account.", "correct": False, "feedback": "Your retirement account is a key asset."}
-        ]
-    },
-    {
-        "title": "General Finance: Emergency Fund",
-        "description": "Which two are key characteristics of a proper 'emergency fund'?",
-        "category": "general_finance",
-        "references": "- **Concept:** [Emergency Fund](https://www.investopedia.com/terms/e/emergency_fund.asp)",
-        "choices": [
-            {"text": "It should be liquid, meaning easily accessible as cash.", "correct": True, "feedback": "The money needs to be available immediately, so a high-yield savings account is a common choice."},
-            {"text": "It should typically cover 3-6 months of essential living expenses.", "correct": True, "feedback": "This is the standard financial planning advice to provide a cushion in case of job loss or other emergencies."},
-            {"text": "It should be invested in high-growth technology stocks.", "correct": False, "feedback": "This would expose your emergency savings to market risk, defeating its purpose as a safety net."},
-            {"text": "It should be used for planned expenses like vacations.", "correct": False, "feedback": "An emergency fund is strictly for unplanned, urgent financial needs."}
+            {"text": "They are essential components in many modern technologies, including smartphones and EVs.", "correct": True, "feedback": "Correct. Their unique magnetic and electronic properties are vital for high-tech manufacturing."},
+            {"text": "China is the dominant global producer, creating supply chain risks for other countries.", "correct": True, "feedback": "Correct. China's control over the mining and processing of rare earths is a significant geopolitical factor."},
+            {"text": "They are called 'rare' because they are less abundant in the Earth's crust than gold.", "correct": False, "feedback": "Incorrect. They are relatively abundant, but are difficult and environmentally damaging to mine and process."},
+            {"text": "They are primarily used to make stainless steel.", "correct": False, "feedback": "Incorrect. The primary components of stainless steel are iron, chromium, and nickel."}
         ]
     }
 ]
