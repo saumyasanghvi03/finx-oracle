@@ -1,5 +1,4 @@
 # scenarios.py
-
 SCENARIOS = [
     # --- Fintech Questions (20) ---
     {
@@ -242,7 +241,7 @@ SCENARIOS = [
             {"text": "By investing in companies that have the most social media followers.", "correct": False, "feedback": "Incorrect. This is a poor metric for genuine ESG performance."}
         ]
     },
-
+    
     # --- Finance & Stock Market Questions (20) ---
     {
         "title": "Stock Market: Market Capitalization",
@@ -496,6 +495,7 @@ SCENARIOS = [
             {"text": "A government savings bond.", "correct": False, "feedback": "Incorrect. Government bonds are a core traditional asset class."}
         ]
     },
+    
     # --- General Knowledge (GK) Questions (10) ---
     {
         "title": "GK: Global Supply Chains",
