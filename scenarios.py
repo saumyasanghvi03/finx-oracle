@@ -14,9 +14,9 @@ SCENARIOS = [
         "title": "The FinTech Startup's Flaw",
         "description": "A new fintech startup integrates a real-time payment gateway. They are experiencing a high volume of transactions, and their initial rule-based fraud engine is generating a massive number of false positives, frustrating legitimate users. They need a more effective solution.",
         "choices": [
-            {"text": "A. Implement a static **deep learning model** trained on historical fraud data.", "correct": False, "feedback": "While effective, a static model will struggle to adapt to new fraud patterns over time."},
+            {"text": "A. Implement a static **deep learning model** trained on historical fraud data, which is faster and more accurate than their current rule-based system.", "correct": False, "feedback": "While effective, a static model will struggle to adapt to new fraud patterns over time."},
             {"text": "B. Utilize a **hybrid model** that combines the initial rules-based system with an AI layer that focuses on detecting zero-day fraud patterns and reducing false positives through anomaly detection.", "correct": True, "feedback": "Correct. A hybrid model is the optimal solution. It leverages the speed of existing rules while using AI for continuous learning and precision, a key feature of **finAIguard**."},
-            {"text": "C. Replace their existing system with a pure **neural network** model that requires no pre-set rules.", "correct": False, "feedback": "A pure neural network can be brittle and prone to errors if not consistently trained on a wide range of data, potentially causing even more false positives."}
+            {"text": "C. Replace their existing system with a pure **neural network** model that requires no pre-set rules, making it entirely autonomous.", "correct": False, "feedback": "A pure neural network can be brittle and prone to errors if not consistently trained on a wide range of data, potentially causing even more false positives."}
         ],
         "project_link": "https://github.com/saumyasanghvi03/finAIguard"
     },
