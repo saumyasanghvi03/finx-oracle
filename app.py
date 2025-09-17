@@ -5,226 +5,283 @@ import base64
 from io import BytesIO
 import pandas as pd
 import os
-from urllib.parse import quote # IMPORT THIS LINE
+from urllib.parse import quote
 
 # --- Constants ---
-NUM_QUESTIONS = 5
+NUM_SCENARIOS = 5
 LEADERBOARD_FILE = "leaderboard.csv"
 
-# --- Page Setup ---
+# --- Page Setup & Styling ---
 def setup_page():
     """Sets up the Streamlit page configuration."""
     st.set_page_config(
-        page_title="The FinX Oracle",
-        page_icon="🔮",
+        page_title="FinX Trading Simulator",
+        page_icon="📈",
         layout="centered"
     )
 
+def load_css():
+    """Injects custom CSS for a dark, trader-focused theme."""
+    css = """
+    <style>
+    /* Main app background */
+    .stApp {
+        background-color: #121212;
+        color: #E0E0E0;
+    }
+    /* Main content area */
+    .main .block-container {
+        background-color: #1E1E1E;
+        border-radius: 10px;
+        padding: 2rem;
+    }
+    /* Buttons */
+    .stButton>button {
+        border: 2px solid #00BFFF;
+        background-color: transparent;
+        color: #00BFFF;
+        border-radius: 5px;
+    }
+    .stButton>button:hover {
+        border-color: #FFFFFF;
+        background-color: #00BFFF;
+        color: #FFFFFF;
+    }
+    /* Headers and Titles */
+    h1, h2, h3 {
+        color: #FFFFFF;
+    }
+    /* Success/Profitable Trade */
+    .stAlert.st-alert.stSuccess {
+        background-color: rgba(46, 139, 87, 0.3);
+        border-left: 5px solid #2E8B57;
+    }
+    /* Error/Trade Loss */
+    .stAlert.st-alert.stError {
+        background-color: rgba(220, 20, 60, 0.3);
+        border-left: 5px solid #DC143C;
+    }
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
+
+
 # --- Game State Management ---
 def initialize_game_state():
-    """Initializes the session state for a new game if it doesn't exist."""
+    """Initializes the session state for a new trading day."""
     if "game_state" not in st.session_state:
-        st.session_state.game_state = "name_input"
-        st.session_state.user_name = ""
-        st.session_state.group_name = ""
+        st.session_state.game_state = "login"
+        st.session_state.trader_name = ""
+        st.session_state.desk_name = ""
         st.session_state.current_scenario = 0
-        st.session_state.insights = 0
-        st.session_state.scenarios = random.sample(SCENARIOS, NUM_QUESTIONS)
+        st.session_state.alpha = 0
+        st.session_state.scenarios = random.sample(SCENARIOS, NUM_SCENARIOS)
         st.session_state.show_feedback = False
         st.session_state.uploaded_image = None
         st.session_state.score_recorded = False
 
-def start_game():
-    """Starts the game after user provides name and group."""
-    if st.session_state.name_input and st.session_state.group_name_input:
-        st.session_state.user_name = st.session_state.name_input
-        st.session_state.group_name = st.session_state.group_name_input
+def start_session():
+    """Starts the session after trader provides credentials."""
+    if st.session_state.name_input and st.session_state.desk_name_input:
+        st.session_state.trader_name = st.session_state.name_input
+        st.session_state.desk_name = st.session_state.desk_name_input
         st.session_state.game_state = "in_game"
     else:
-        st.warning("Please enter both your name and a group name to begin.")
+        st.warning("Please enter both Trader Name and Desk to begin.")
 
-def restart_game():
-    """Clears the session state to restart the game."""
+def new_trading_day():
+    """Clears the session state to start a new day."""
     st.session_state.clear()
     st.rerun()
 
 # --- UI Display Functions ---
-def display_name_input():
-    """Displays the initial screen for user to enter their name and group."""
-    st.title("Welcome to The FinX Oracle 🔮")
-    st.markdown("Enter your name and a group name to begin your journey and compete with friends!")
+def display_login():
+    """Displays the initial screen for trader to enter credentials."""
+    st.title("FinX Trading Simulator 📈")
+    st.markdown("Enter your credentials to access the trading terminal.")
     
-    st.text_input("Your Name", key="name_input")
-    st.text_input("Group Name (e.g., 'Team Apollo')", key="group_name_input")
+    st.text_input("Trader Name", key="name_input")
+    st.text_input("Trading Desk (e.g., 'Alpha One')", key="desk_name_input")
     
-    st.button("Start Challenge", on_click=start_game)
+    st.button("Access Terminal", on_click=start_session)
 
 def display_scenario():
-    """Displays the current scenario, choices, and handles user input."""
+    """Displays the current market scenario and trading options."""
     current_index = st.session_state.current_scenario
-    if current_index >= NUM_QUESTIONS:
+    if current_index >= NUM_SCENARIOS:
         st.session_state.game_state = "results"
         st.rerun()
         return
 
     scenario_data = st.session_state.scenarios[current_index]
 
-    st.header(f"Oracle's Challenge #{current_index + 1}/{NUM_QUESTIONS}: {scenario_data['title']}")
-    st.markdown(f"**Scenario:** *{scenario_data['description']}*")
+    st.header(f"Market Scenario #{current_index + 1}/{NUM_SCENARIOS}")
+    st.subheader(scenario_data['title'])
+    st.markdown(f"**Intel Briefing:** *{scenario_data['description']}*")
     st.markdown("---")
 
     is_disabled = st.session_state.show_feedback
     
     selected_choice = st.radio(
-        "Your Decision:", 
+        "Your Strategy:", 
         [choice['text'] for choice in scenario_data['choices']], 
         key=f"scenario_{current_index}",
         disabled=is_disabled
     )
     
     if not is_disabled:
-        if st.button("Commit Decision", key=f"submit_{current_index}"):
+        if st.button("Execute Trade", key=f"submit_{current_index}"):
             st.session_state.show_feedback = True
             for choice in scenario_data['choices']:
                 if selected_choice == choice['text'] and choice['correct']:
-                    st.session_state.insights += 1
+                    st.session_state.alpha += 1
             st.rerun()
 
     if st.session_state.show_feedback:
         user_choice_obj = next((c for c in scenario_data['choices'] if c['text'] == selected_choice), None)
-        if user_choice_obj:
+        
+        st.subheader("Post-Trade Analysis")
+        col1, col2 = st.columns([1, 3])
+
+        with col1:
             if user_choice_obj['correct']:
-                st.success(f"🔮 Insight Gained! {user_choice_obj['feedback']}")
+                st.metric(label="P&L", value="+1 Alpha", delta="Profitable")
             else:
-                st.error(f"❌ Missed Insight. {user_choice_obj['feedback']}")
+                st.metric(label="P&L", value="0 Alpha", delta="Loss", delta_color="inverse")
         
-        st.markdown("---")
-        st.markdown(f"**Learn more:** Check out the project at: {scenario_data['project_link']}")
+        with col2:
+            if user_choice_obj['correct']:
+                st.success(f"✅ Trade executed successfully. {user_choice_obj['feedback']}")
+            else:
+                st.error(f"❌ Trade resulted in a loss. {user_choice_obj['feedback']}")
+
+        st.markdown(f"**Further Reading:** {scenario_data['project_link']}")
         
-        def next_question():
+        def next_scenario():
             st.session_state.current_scenario += 1
             st.session_state.show_feedback = False
         
-        st.button("Next Question", on_click=next_question, key=f"next_{current_index}")
+        st.button("Next Scenario", on_click=next_scenario, key=f"next_{current_index}")
+
 
 def display_results():
-    """Displays the final results, score frame, leaderboard, and share options."""
+    """Displays the End of Day report with performance metrics."""
     st.balloons()
-    final_insights = st.session_state.insights
-    user_name = st.session_state.user_name
-    group_name = st.session_state.group_name
+    final_alpha = st.session_state.alpha
+    trader_name = st.session_state.trader_name
+    desk_name = st.session_state.desk_name
 
     if not st.session_state.score_recorded:
-        update_leaderboard(user_name, group_name, final_insights)
+        update_leaderboard(trader_name, desk_name, final_alpha)
         st.session_state.score_recorded = True
 
-    st.title("The Oracle Has Spoken! 🔮")
-    st.markdown(f"### Congratulations, {user_name}!")
-    st.markdown(f"You gained **{final_insights}** out of **{NUM_QUESTIONS}** Oracle's Insights.")
+    st.title("End of Day Report 📝")
+    st.markdown(f"### Performance Summary for **{trader_name}**")
     
-    if final_insights >= NUM_QUESTIONS - 1:
-        st.success("Your strategic foresight is peerless. You are a true FinX Oracle!")
-    else:
-        st.warning("Your insights are valuable, but there's more to discover.")
-
-    st.markdown("---")
-    st.subheader("Your Score Frame")
-
-    uploaded_file = st.file_uploader("Upload your photo for the frame", type=["png", "jpg", "jpeg"])
-
-    if uploaded_file is not None:
-        st.session_state.uploaded_image = uploaded_file
-
-    image_html = get_image_frame_html()
-    st.markdown(image_html, unsafe_allow_html=True)
-    
-    st.info("Share your result on social media!")
-    display_share_options(final_insights, user_name) # THIS FUNCTION IS NOW UPDATED
-
-    st.markdown("---")
-    display_leaderboard(group_name)
-
-    st.button("Restart Journey", on_click=restart_game)
-
-def get_image_frame_html():
-    """Generates the HTML for the user's score frame with their photo."""
-    if st.session_state.uploaded_image is not None:
-        uploaded_image_bytes = BytesIO(st.session_state.uploaded_image.getvalue())
-        uploaded_image_b64 = base64.b64encode(uploaded_image_bytes.read()).decode('utf-8')
-        image_src = f"data:image/jpeg;base64,{uploaded_image_b64}"
-        image_element = f"<img src='{image_src}' style='width: 100%; height: 100%; object-fit: cover;'>"
-    else:
-        image_element = "<p style='padding-top: 60px; font-size: 0.9em; color: #555; text-align: center;'>Add Your Photo</p>"
-
-    return f"""
-        <div style='text-align: center; padding: 20px; border: 4px solid #5C6AC4; border-radius: 15px; background-color: #F0F2F6; box-shadow: 0 4px 8px rgba(0,0,0,0.1);'>
-            <h2 style='color: #2D2D2D;'>FinX Oracle: Final Score</h2>
-            <div style='height: 150px; width: 150px; margin: 20px auto; border-radius: 50%; border: 3px solid #5C6AC4; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #D3D3D3;'>
-                {image_element}
-            </div>
-            <h1 style='font-size: 3em; color: #5C6AC4;'>{st.session_state.insights}/{NUM_QUESTIONS}</h1>
-            <p style='font-size: 1.2em; color: #555;'>- {st.session_state.user_name}</p>
-        </div>
-    """
-
-def display_share_options(final_insights, user_name):
-    """Displays the X (Twitter) / Threads sharing text and button."""
+    # --- Performance Metrics Dashboard ---
+    win_rate = (final_alpha / NUM_SCENARIOS) * 100
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**1. Copy this post text:**")
-        # Shorter text suitable for Twitter and Threads
+        st.metric(label="Total Alpha Generated", value=f"{final_alpha}", help="Each correct decision generates 1 Alpha.")
+    with col2:
+        st.metric(label="Win Rate", value=f"{win_rate:.1f}%", help="Percentage of profitable trades.")
+    
+    st.markdown("---")
+
+    # --- Trader ID Card ---
+    st.subheader("Trader ID")
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        uploaded_file = st.file_uploader("Upload Trader Photo", type=["png", "jpg", "jpeg"], label_visibility="collapsed")
+        if uploaded_file:
+            st.session_state.uploaded_image = uploaded_file
+        
+        if st.session_state.uploaded_image:
+            st.image(st.session_state.uploaded_image, width=150, caption="Trader Photo")
+        else:
+            st.markdown("_Upload a photo to display on your ID._")
+
+    with col2:
+        st.text_input("Trader", value=trader_name, disabled=True)
+        st.text_input("Desk", value=desk_name, disabled=True)
+        if final_alpha >= NUM_SCENARIOS - 1:
+            st.success("Status: Top Performer")
+        else:
+            st.warning("Status: Performance Review Required")
+
+    st.markdown("---")
+    st.info("Share your performance report.")
+    display_share_options(final_alpha)
+
+    st.markdown("---")
+    display_leaderboard(desk_name)
+
+    st.button("New Trading Day", on_click=new_trading_day)
+
+
+def display_share_options(final_alpha):
+    """Displays sharing options for X (Twitter) / Threads."""
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**1. Copy Post Text:**")
         post_text = (
-            f"I just scored {final_insights}/{NUM_QUESTIONS} on the FinX Oracle challenge! 🔮\n\n"
-            f"Testing my knowledge on real-world scenarios in blockchain, AI, and derivatives. How would you score?\n\n"
-            f"#FinXInstitute #FinTech #FinXOracle #AI"
+            f"Finished the day on the FinX Trading Simulator with {final_alpha} Alpha and a { (final_alpha / NUM_SCENARIOS) * 100 :.0f}% win rate. 📈\n\n"
+            f"Challenging scenarios in AI, blockchain, and derivatives. Think you can do better?\n\n"
+            f"#FinX #TradingSim #FinTech #Alpha"
         )
         st.code(post_text, language='text')
 
     with col2:
-        st.markdown("**2. Click here to post:**")
-        # URL-encode the text for the Twitter share link
+        st.markdown("**2. Post to Socials:**")
         encoded_text = quote(post_text)
         twitter_url = f"https://twitter.com/intent/tweet?text={encoded_text}"
-        
         st.link_button("Post on X (Twitter)", twitter_url)
-        st.markdown("Or, copy the text and post on **Threads**!")
+        st.markdown("Or, copy the text to post elsewhere.")
 
 # --- Leaderboard Logic ---
 def update_leaderboard(user, group, score):
     """Adds a new entry to the leaderboard CSV file."""
-    new_entry = pd.DataFrame([{'User': user, 'Group': group, 'Score': score}])
+    new_entry = pd.DataFrame([{'Trader': user, 'Desk': group, 'Alpha': score}])
     try:
         if not os.path.exists(LEADERBOARD_FILE):
             new_entry.to_csv(LEADERBOARD_FILE, index=False)
         else:
-            new_entry.to_csv(LEADERBOARD_FILE, mode='a', header=False, index=False)
+            # Load existing, append, drop duplicates for the same trader, save
+            df = pd.read_csv(LEADERBOARD_FILE)
+            df = pd.concat([df, new_entry], ignore_index=True)
+            df.drop_duplicates(subset=['Trader', 'Desk'], keep='last', inplace=True)
+            df.to_csv(LEADERBOARD_FILE, index=False)
     except Exception as e:
         st.error(f"Could not save score: {e}")
-        
-def display_leaderboard(group_name):
-    """Reads the CSV and displays the leaderboard for the specified group."""
+
+def display_leaderboard(desk_name):
+    """Reads the CSV and displays the P&L ranking for the specified desk."""
     if os.path.exists(LEADERBOARD_FILE):
         try:
             leaderboard_df = pd.read_csv(LEADERBOARD_FILE)
-            group_leaderboard = leaderboard_df[leaderboard_df['Group'] == group_name].sort_values(
-                by='Score', ascending=False
+            # Rename columns for display
+            leaderboard_df.rename(columns={'Trader': 'Trader', 'Desk': 'Desk', 'Alpha': 'Alpha'}, inplace=True)
+            desk_leaderboard = leaderboard_df[leaderboard_df['Desk'] == desk_name].sort_values(
+                by='Alpha', ascending=False
             ).reset_index(drop=True)
             
-            st.markdown(f"### Leaderboard for '{group_name}'")
-            st.dataframe(group_leaderboard, hide_index=True)
+            st.subheader(f"P&L Ranking for '{desk_name}'")
+            st.dataframe(desk_leaderboard, use_container_width=True)
         except Exception as e:
             st.error(f"Could not load leaderboard: {e}")
     else:
-        st.markdown("No scores yet for this group. Be the first to play!")
+        st.markdown("No performance data recorded for this desk yet.")
+
 
 # --- Main App Logic ---
 def main():
     """Main function to run the Streamlit app."""
     setup_page()
+    load_css()
     initialize_game_state()
 
-    if st.session_state.game_state == "name_input":
-        display_name_input()
+    if st.session_state.game_state == "login":
+        display_login()
     elif st.session_state.game_state == "in_game":
         display_scenario()
     elif st.session_state.game_state == "results":
