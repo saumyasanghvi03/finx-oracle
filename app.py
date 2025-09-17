@@ -21,7 +21,7 @@ def initialize_game_state():
     if "game_state" not in st.session_state:
         st.session_state.game_state = "name_input"
         st.session_state.user_name = ""
-        st.session_state.group_name = ""  # Initialize group_name here
+        st.session_state.group_name = ""
         st.session_state.current_scenario = 0
         st.session_state.insights = 0
         st.session_state.scenarios = random.sample(SCENARIOS, NUM_QUESTIONS)
