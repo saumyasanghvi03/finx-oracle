@@ -4,6 +4,9 @@ from scenarios import SCENARIOS
 import random
 import pandas as pd
 import os
+import base64
+from io import BytesIO
+from urllib.parse import quote
 
 # --- Constants ---
 NUM_QUESTIONS = 5
@@ -17,6 +20,42 @@ def setup_page():
         layout="centered"
     )
 
+# --- Helper Functions ---
+def get_player_photo_html():
+    """Generates the HTML for the circular player photo frame."""
+    if st.session_state.uploaded_image is not None:
+        image_bytes = BytesIO(st.session_state.uploaded_image.getvalue())
+        encoded_image = base64.b64encode(image_bytes.read()).decode()
+        image_element = f"<img src='data:image/png;base64,{encoded_image}' style='width: 100%; height: 100%; object-fit: cover;'>"
+    else:
+        image_element = "<p style='text-align: center; margin-top: 55px; font-size: 14px; color: #888;'>Upload Photo</p>"
+
+    frame_html = f"""
+        <div style='width: 150px; height: 150px; border-radius: 50%; border: 3px solid #FFFFFF; overflow: hidden; background-color: #333;'>
+            {image_element}
+        </div>
+    """
+    return frame_html
+
+def display_share_options(player_name, final_score):
+    """Displays the X (Twitter) sharing text and button."""
+    st.subheader("Share Your Score")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**1. Copy this post text:**")
+        post_text = (
+            f"I scored {final_score}/{NUM_QUESTIONS} in the FinX Oracle challenge! 🔮\n\n"
+            f"My knowledge of fintech, finance, and global markets was put to the test with scenarios from late 2025. How would you do?\n\n"
+            f"#FinXOracle #Fintech #FinanceQuiz"
+        )
+        st.code(post_text, language='text')
+
+    with col2:
+        st.markdown("**2. Post on X (Twitter):**")
+        encoded_text = quote(post_text)
+        twitter_url = f"https://twitter.com/intent/tweet?text={encoded_text}"
+        st.link_button("Post on X (Twitter)", twitter_url)
+
 # --- Game State Management ---
 def initialize_state():
     if "game_state" not in st.session_state:
@@ -26,22 +65,19 @@ def initialize_state():
         st.session_state.current_question = 0
         st.session_state.score = 0
         st.session_state.show_feedback = False
+        st.session_state.uploaded_image = None # Added for photo frame
         
-        # --- 2:2:1 Ratio Logic ---
         fintech_questions = [q for q in SCENARIOS if q['category'] == 'fintech']
         general_finance_questions = [q for q in SCENARIOS if q['category'] == 'general_finance']
         gk_questions = [q for q in SCENARIOS if q['category'] == 'gk']
 
-        # Sample 2 fintech, 2 finance, and 1 GK question
         selected_fintech = random.sample(fintech_questions, min(2, len(fintech_questions)))
         selected_general = random.sample(general_finance_questions, min(2, len(general_finance_questions)))
         selected_gk = random.sample(gk_questions, min(1, len(gk_questions)))
 
-        # Combine and shuffle the final list
         scenarios_sample = selected_fintech + selected_general + selected_gk
         random.shuffle(scenarios_sample)
             
-        # For each chosen question, shuffle its answer options
         for scenario in scenarios_sample:
             random.shuffle(scenario['choices']) 
             
@@ -144,37 +180,50 @@ def display_results():
         st.session_state.score_recorded = True
 
     st.title("Challenge Completed!")
-    st.markdown(f"### Congratulations, {player_name} of Team '{team_name}'!")
-    st.metric(label="Your Final Score", value=f"{final_score} / {NUM_QUESTIONS}")
+    
+    # --- Player Card with Photo Frame ---
+    st.subheader("Player Card")
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        photo_frame = get_player_photo_html()
+        st.markdown(photo_frame, unsafe_allow_html=True)
+        uploaded_file = st.file_uploader("Upload Your Photo", type=["png", "jpg", "jpeg"], label_visibility="collapsed")
+        if uploaded_file:
+            st.session_state.uploaded_image = uploaded_file
+            st.rerun()
+
+    with col2:
+        st.text_input("Player", value=player_name, disabled=True)
+        st.text_input("Team", value=team_name, disabled=True)
+        st.metric(label="Your Final Score", value=f"{final_score} / {NUM_QUESTIONS}")
     
     st.markdown("---")
     display_leaderboard(team_name)
+    
+    st.markdown("---")
+    display_share_options(player_name, final_score)
+
+    st.markdown("---")
     st.button("Play Again", on_click=restart_game)
 
 # --- Leaderboard Logic ---
 def update_leaderboard(player, team, score):
-    """Adds or updates an entry, handling old/corrupt CSV files."""
     new_entry = pd.DataFrame([{'Player': player, 'Team': team, 'Score': score}])
     required_columns = ['Player', 'Team', 'Score']
 
     if os.path.exists(LEADERBOARD_FILE):
         try:
             df = pd.read_csv(LEADERBOARD_FILE)
-            # If columns are not what we expect, the file is outdated.
             if list(df.columns) != required_columns:
                 raise ValueError("Incorrect column format")
             
-            # Remove old entry for the same player before adding new one
             df = df[df['Player'] != player]
             df = pd.concat([df, new_entry], ignore_index=True)
             df.to_csv(LEADERBOARD_FILE, index=False)
         except (ValueError, pd.errors.EmptyDataError):
-            # If file is malformed, empty, or has wrong columns, overwrite it.
             new_entry.to_csv(LEADERBOARD_FILE, index=False)
     else:
-        # If file doesn't exist, create it.
         new_entry.to_csv(LEADERBOARD_FILE, index=False)
-
 
 def display_leaderboard(current_team_name):
     if not os.path.exists(LEADERBOARD_FILE):
@@ -193,19 +242,20 @@ def display_leaderboard(current_team_name):
         st.write("Be the first to set a score!")
         return
 
-    # --- Team Leaderboard (based on Average Score) ---
-    st.subheader("🏆 Team Leaderboard")
-    team_scores = df.groupby('Team').agg(
-        Average_Score=('Score', 'mean'),
-        Players=('Player', 'count')
-    ).round(2).sort_values(by="Average_Score", ascending=False).reset_index()
-    
-    st.dataframe(team_scores, use_container_width=True)
+    st.subheader("🏆 Leaderboards")
+    tab1, tab2 = st.tabs(["Team Rankings", f"Team '{current_team_name}' Players"])
 
-    # --- Individual Leaderboard (for the user's team) ---
-    st.subheader(f"Players on Team '{current_team_name}'")
-    team_df = df[df['Team'] == current_team_name].sort_values(by="Score", ascending=False).reset_index(drop=True)
-    st.dataframe(team_df, use_container_width=True)
+    with tab1:
+        st.markdown("##### Overall Team Standings (by Average Score)")
+        team_scores = df.groupby('Team').agg(
+            Average_Score=('Score', 'mean'),
+            Players=('Player', 'count')
+        ).round(2).sort_values(by="Average_Score", ascending=False).reset_index()
+        st.dataframe(team_scores, use_container_width=True)
+
+    with tab2:
+        team_df = df[df['Team'] == current_team_name].sort_values(by="Score", ascending=False).reset_index(drop=True)
+        st.dataframe(team_df, use_container_width=True)
 
 # --- Main App ---
 def main():
