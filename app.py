@@ -9,65 +9,86 @@ import os
 NUM_QUESTIONS = 5
 LEADERBOARD_FILE = "leaderboard.csv"
 
-# --- Page Setup ---
+# --- Page Setup & Styling ---
 def setup_page():
     st.set_page_config(
-        page_title="Finance & Fintech Quiz",
-        page_icon="💡",
+        page_title="FinX Oracle",
+        page_icon="🔮",
         layout="centered"
     )
+
+def load_css():
+    """Injects custom CSS for a dark, red & green trader theme."""
+    css = """
+    <style>
+    .stApp { background-color: #111111; color: #FFFFFF; }
+    .main .block-container { background-color: #1E1E1E; border: 1px solid #333; border-radius: 10px; padding: 2rem; }
+    .stButton>button { border: 2px solid #FFFFFF; background-color: transparent; color: #FFFFFF; border-radius: 5px; transition: all 0.2s; }
+    .stButton>button:hover { border-color: #2E8B57; background-color: #2E8B57; color: #FFFFFF; }
+    h1, h2, h3 { color: #FFFFFF; }
+    .stAlert.st-alert.stSuccess { background-color: rgba(46, 139, 87, 0.2); border-left: 6px solid #2E8B57; color: #90EE90; }
+    .stAlert.st-alert.stError { background-color: rgba(220, 20, 60, 0.2); border-left: 6px solid #DC143C; color: #F08080; }
+    [data-testid="stMetricValue"] { color: #FFFFFF; }
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
 
 # --- Game State Management ---
 def initialize_state():
     if "game_state" not in st.session_state:
         st.session_state.game_state = "name_input"
-        st.session_state.user_name = ""
+        st.session_state.player_name = ""
+        st.session_state.team_name = ""
         st.session_state.current_question = 0
         st.session_state.score = 0
         st.session_state.show_feedback = False
         
-        # --- 2:2:1 Ratio Logic ---
+        # --- Randomization Logic ---
+        # 1. Separate questions into categories from the full pool
         fintech_questions = [q for q in SCENARIOS if q['category'] == 'fintech']
         general_finance_questions = [q for q in SCENARIOS if q['category'] == 'general_finance']
         gk_questions = [q for q in SCENARIOS if q['category'] == 'gk']
 
-        # Sample 2 fintech, 2 finance, and 1 GK question
+        # 2. Select a 2:2:1 ratio of questions
         selected_fintech = random.sample(fintech_questions, min(2, len(fintech_questions)))
         selected_general = random.sample(general_finance_questions, min(2, len(general_finance_questions)))
         selected_gk = random.sample(gk_questions, min(1, len(gk_questions)))
 
-        # Combine and shuffle the final list
+        # 3. Combine and shuffle the final list for the user
         scenarios_sample = selected_fintech + selected_general + selected_gk
         random.shuffle(scenarios_sample)
             
-        # For each chosen question, shuffle its answer options
+        # 4. For each chosen question, shuffle its answer options
         for scenario in scenarios_sample:
             random.shuffle(scenario['choices']) 
             
         st.session_state.scenarios = scenarios_sample
         st.session_state.score_recorded = False
 
-def start_quiz():
-    if st.session_state.name_input:
-        st.session_state.user_name = st.session_state.name_input
-        st.session_state.game_state = "in_quiz"
+def start_game():
+    if st.session_state.name_input and st.session_state.team_input:
+        st.session_state.player_name = st.session_state.name_input
+        st.session_state.team_name = st.session_state.team_input
+        st.session_state.game_state = "in_game"
     else:
-        st.warning("Please enter your name to begin.")
+        st.warning("Please enter both your name and a team name to begin.")
 
-def restart_quiz():
+def restart_game():
     st.session_state.clear()
 
 # --- UI Display Functions ---
 def display_name_input():
-    st.title("Welcome to the Finance & Fintech Quiz! 💡")
-    st.markdown("Test your knowledge on recent market events. **Each question has exactly two correct answers.**")
-    st.text_input("Enter Your Name", key="name_input")
-    st.button("Start Quiz", on_click=start_quiz)
+    st.title("Welcome to the FinX Oracle 🔮")
+    st.markdown("Join a team, test your financial knowledge, and compete for the top spot.")
+    st.markdown("**Each question has exactly two correct answers.**")
+    st.text_input("Your Name", key="name_input")
+    st.text_input("Team Name", key="team_input")
+    st.button("Begin Challenge", on_click=start_game)
 
 def display_question():
     if 'scenarios' not in st.session_state or not st.session_state.scenarios:
         st.error("There was an error loading questions. Please restart.")
-        st.button("Restart Quiz", on_click=restart_quiz)
+        st.button("Restart Challenge", on_click=restart_game)
         return
 
     current_index = st.session_state.current_question
@@ -125,52 +146,71 @@ def display_question():
         st.button("Next Question", on_click=next_question)
 
 def display_results():
-    if 'score' not in st.session_state or 'user_name' not in st.session_state:
-        st.error("SESSION ERROR: Game state not found. Please start a new quiz.")
-        st.button("Play Again", on_click=restart_quiz)
+    if 'score' not in st.session_state or 'player_name' not in st.session_state:
+        st.error("SESSION ERROR: Game state not found. Please start a new challenge.")
+        st.button("Restart Challenge", on_click=restart_game)
         return
 
     st.balloons()
     final_score = st.session_state.score
-    user_name = st.session_state.user_name
+    player_name = st.session_state.player_name
+    team_name = st.session_state.team_name
 
     if not st.session_state.score_recorded:
-        update_leaderboard(user_name, final_score)
+        update_leaderboard(player_name, team_name, final_score)
         st.session_state.score_recorded = True
 
-    st.title("Quiz Completed!")
-    st.markdown(f"### Congratulations, {user_name}!")
+    st.title("Challenge Completed!")
+    st.markdown(f"### Congratulations, {player_name} of Team '{team_name}'!")
     st.metric(label="Your Final Score", value=f"{final_score} / {NUM_QUESTIONS}")
     
     st.markdown("---")
-    display_leaderboard()
-    st.button("Play Again", on_click=restart_quiz)
+    display_leaderboard(team_name)
+    st.button("Play Again", on_click=restart_game)
 
 # --- Leaderboard Logic ---
-def update_leaderboard(user, score):
-    new_entry = pd.DataFrame([{'Name': user, 'Score': score}])
+def update_leaderboard(player, team, score):
+    new_entry = pd.DataFrame([{'Player': player, 'Team': team, 'Score': score}])
     if not os.path.exists(LEADERBOARD_FILE):
         new_entry.to_csv(LEADERBOARD_FILE, index=False)
     else:
         df = pd.read_csv(LEADERBOARD_FILE)
-        df = df[df['Name'] != user]
+        # Remove old entry for the same player before adding new one
+        df = df[df['Player'] != player]
         df = pd.concat([df, new_entry], ignore_index=True)
         df.to_csv(LEADERBOARD_FILE, index=False)
 
-def display_leaderboard():
-    if os.path.exists(LEADERBOARD_FILE):
+def display_leaderboard(current_team_name):
+    if not os.path.exists(LEADERBOARD_FILE):
         st.subheader("Leaderboard")
-        df = pd.read_csv(LEADERBOARD_FILE).sort_values(by="Score", ascending=False).reset_index(drop=True)
-        st.dataframe(df, use_container_width=True)
+        st.write("Be the first to set a score!")
+        return
+
+    df = pd.read_csv(LEADERBOARD_FILE)
+
+    # --- Team Leaderboard (based on Average Score) ---
+    st.subheader("🏆 Team Leaderboard")
+    team_scores = df.groupby('Team').agg(
+        Average_Score=('Score', 'mean'),
+        Players=('Player', 'count')
+    ).round(2).sort_values(by="Average_Score", ascending=False).reset_index()
+    
+    st.dataframe(team_scores, use_container_width=True)
+
+    # --- Individual Leaderboard (for the user's team) ---
+    st.subheader(f"Players on Team '{current_team_name}'")
+    team_df = df[df['Team'] == current_team_name].sort_values(by="Score", ascending=False).reset_index(drop=True)
+    st.dataframe(team_df, use_container_width=True)
 
 # --- Main App ---
 def main():
     setup_page()
+    load_css()
     initialize_state()
 
     if st.session_state.game_state == "name_input":
         display_name_input()
-    elif st.session_state.game_state == "in_quiz":
+    elif st.session_state.game_state == "in_game":
         display_question()
     elif st.session_state.game_state == "results":
         display_results()
