@@ -166,6 +166,12 @@ def display_scenario():
 
 def display_results():
     """Displays the End of Day report with performance metrics."""
+    # Add this check to prevent crashes from invalid session states
+    if 'alpha' not in st.session_state or 'trader_name' not in st.session_state:
+        st.error("SESSION ERROR: Game state not found. Please start a new session.")
+        st.button("New Trading Day", on_click=new_trading_day)
+        return # Stop the function here to prevent the crash
+
     st.balloons()
     final_alpha = st.session_state.alpha
     trader_name = st.session_state.trader_name
