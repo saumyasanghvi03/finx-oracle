@@ -35,7 +35,7 @@ def start_game():
         st.session_state.user_name = st.session_state.name_input
         st.session_state.group_name = st.session_state.group_name_input
         st.session_state.game_state = "in_game"
-        st.rerun()
+        # Removed st.rerun() because the callback automatically triggers a re-run
     else:
         st.warning("Please enter both your name and a group name to begin.")
 
